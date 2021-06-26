@@ -1,52 +1,26 @@
 import "./App.scss";
+import Pane from "./components/Pane";
+import PaneSection from "./components/PaneSection";
 import React from "react";
 import SplitPane from "react-split-pane";
 import {
   Accordion,
-  AccordionItem,
-  AccordionButton,
-  AccordionIcon,
-  AccordionPanel,
-  HStack,
-  VStack,
   Box,
-  Link,
   Table,
-  Text,
-  Th,
   Tr,
   Td,
   Tbody,
-  Tfoot,
-  Thead,
   ChakraProvider,
 } from "@chakra-ui/react";
-import { Global, css } from "@emotion/react";
 import { AiFillFolder } from "react-icons/ai";
-import { RiTerminalBoxFill } from "react-icons/ri";
+import { FaPlusSquare, FaMinusSquare } from "react-icons/fa";
+import { Global, css } from "@emotion/react";
+import { IoIosArrowDroprightCircle } from "react-icons/io";
 import {
   TreeMenuContainer,
   TreeMenu,
   TreeMenuItem,
 } from "./components/TreeMenu";
-
-function PaneSection({ title, children }) {
-  return (
-    <AccordionItem>
-      <h2>
-        <AccordionButton className="no-select" px={2}>
-          <AccordionIcon mr={1} fontSize="15px" />
-          <Box flex="1" textAlign="left">
-            <Text fontSize="14px">{title}</Text>
-          </Box>
-        </AccordionButton>
-      </h2>
-      <AccordionPanel py={0} px={0}>
-        {children}
-      </AccordionPanel>
-    </AccordionItem>
-  );
-}
 
 function ModulePane() {
   const TableCell = ({ children }) => (
@@ -76,7 +50,7 @@ function ModulePane() {
             <TableRow>
               <TableCell>
                 <Box mr={1}>
-                  <RiTerminalBoxFill />
+                  <IoIosArrowDroprightCircle />
                 </Box>
                 main
               </TableCell>
@@ -85,7 +59,7 @@ function ModulePane() {
             <TableRow>
               <TableCell>
                 <Box mr={1}>
-                  <RiTerminalBoxFill />
+                  <IoIosArrowDroprightCircle />
                 </Box>
                 toString
               </TableCell>
@@ -94,7 +68,7 @@ function ModulePane() {
             <TableRow>
               <TableCell>
                 <Box mr={1}>
-                  <RiTerminalBoxFill />
+                  <IoIosArrowDroprightCircle />
                 </Box>
                 factorial
               </TableCell>
@@ -141,18 +115,38 @@ function ModulesList() {
   );
 }
 
-function Pane({ title, children }) {
-  return (
-    <Box overflow="auto">
-      <VStack align="left">
-        {title && <Box>{title}</Box>}
-        <Box>{children}</Box>
-      </VStack>
-    </Box>
-  );
-}
-
 function Layout() {
+  const testTree = [
+    {
+      nodeName: "EFix",
+      expanded: false,
+      children: [
+        {
+          nodeName: "ELam",
+          children: [],
+        },
+        {
+          nodeName: "ELet",
+          children: [],
+        },
+      ],
+    },
+  ];
+
+  const Tree = ({ nodes, root = false }) => {
+    return (
+      nodes && (
+        <TreeMenu>
+          {nodes.map(({ nodeName, children }, i) => (
+            <TreeMenuItem root={root} key={i} title={nodeName}>
+              <Tree nodes={children} />
+            </TreeMenuItem>
+          ))}
+        </TreeMenu>
+      )
+    );
+  };
+
   return (
     <>
       <SplitPane split="horizontal" defaultSize={20}>
@@ -168,12 +162,14 @@ function Layout() {
               </Pane>
               <Pane title="Main.factorial">
                 <TreeMenuContainer>
+                  <Tree nodes={testTree} root={true} />
+                  {/*
                   <TreeMenu>
                     <TreeMenuItem root title="Root">
                       <TreeMenu>
                         <TreeMenuItem title="Main" />
                         <TreeMenuItem title="List" />
-                        <TreeMenuItem icon={AiFillFolder} title="List">
+                        <TreeMenuItem icon={FaPlusSquare} title="List">
                           <TreeMenu>
                             <TreeMenuItem title="List.Extra" />
                             <TreeMenuItem title="List.NonEmpty" />
@@ -182,6 +178,7 @@ function Layout() {
                       </TreeMenu>
                     </TreeMenuItem>
                   </TreeMenu>
+                  */}
                 </TreeMenuContainer>
               </Pane>
             </SplitPane>
