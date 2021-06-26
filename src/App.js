@@ -7,6 +7,7 @@ import {
   AccordionButton,
   AccordionIcon,
   AccordionPanel,
+  HStack,
   VStack,
   Box,
   Link,
@@ -22,6 +23,7 @@ import {
 } from "@chakra-ui/react";
 import { Global, css } from "@emotion/react";
 import { AiFillFolder } from "react-icons/ai";
+import { RiTerminalBoxFill } from "react-icons/ri";
 import {
   TreeMenuContainer,
   TreeMenu,
@@ -48,8 +50,10 @@ function PaneSection({ title, children }) {
 
 function ModulePane() {
   const TableCell = ({ children }) => (
-    <Td borderTop="1px solid #e2e8f0" borderBottom="none" py={1}>
-      {children}
+    <Td borderTop="1px solid #e2e8f0" borderBottom="none" py={1} px={3}>
+      <Box d="flex" alignItems="center">
+        {children}
+      </Box>
     </Td>
   );
 
@@ -64,46 +68,59 @@ function ModulePane() {
   };
 
   return (
-    <>
-      <Accordion reduceMotion={true} defaultIndex={[0]} allowMultiple>
-        <PaneSection title="Imports">section 1</PaneSection>
-        <PaneSection title="Definitions">
-          <Table size="sm">
-            <Tbody>
-              <TableRow>
-                <TableCell>main</TableCell>
-                <TableCell>Int &rarr; IO ()</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>toString</TableCell>
-                <TableCell>a &rarr; String</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>factorial</TableCell>
-                <TableCell>Nat &rarr; Nat</TableCell>
-              </TableRow>
-            </Tbody>
-          </Table>
-        </PaneSection>
-        <PaneSection title="Type declarations">
-          <Table size="sm">
-            <Tbody>
-              <TableRow>
-                <TableCell>List a</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Nat</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Option a</TableCell>
-              </TableRow>
-            </Tbody>
-          </Table>
-        </PaneSection>
-        <PaneSection title="Classes">section 4</PaneSection>
-        <PaneSection title="Class instances">section 5</PaneSection>
-      </Accordion>
-    </>
+    <Accordion reduceMotion={true} defaultIndex={[0]} allowMultiple>
+      <PaneSection title="Imports">section 1</PaneSection>
+      <PaneSection title="Definitions">
+        <Table size="sm">
+          <Tbody>
+            <TableRow>
+              <TableCell>
+                <Box mr={1}>
+                  <RiTerminalBoxFill />
+                </Box>
+                main
+              </TableCell>
+              <TableCell>Int &rarr; IO ()</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>
+                <Box mr={1}>
+                  <RiTerminalBoxFill />
+                </Box>
+                toString
+              </TableCell>
+              <TableCell>a &rarr; String</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>
+                <Box mr={1}>
+                  <RiTerminalBoxFill />
+                </Box>
+                factorial
+              </TableCell>
+              <TableCell>Nat &rarr; Nat</TableCell>
+            </TableRow>
+          </Tbody>
+        </Table>
+      </PaneSection>
+      <PaneSection title="Type declarations">
+        <Table size="sm">
+          <Tbody>
+            <TableRow>
+              <TableCell>List a</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Nat</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Option a</TableCell>
+            </TableRow>
+          </Tbody>
+        </Table>
+      </PaneSection>
+      <PaneSection title="Classes">section 4</PaneSection>
+      <PaneSection title="Class instances">section 5</PaneSection>
+    </Accordion>
   );
 }
 
@@ -149,10 +166,27 @@ function Layout() {
               <Pane title="Main">
                 <ModulePane />
               </Pane>
-              <Pane />
+              <Pane title="Main.factorial">
+                <TreeMenuContainer>
+                  <TreeMenu>
+                    <TreeMenuItem root title="Root">
+                      <TreeMenu>
+                        <TreeMenuItem title="Main" />
+                        <TreeMenuItem title="List" />
+                        <TreeMenuItem icon={AiFillFolder} title="List">
+                          <TreeMenu>
+                            <TreeMenuItem title="List.Extra" />
+                            <TreeMenuItem title="List.NonEmpty" />
+                          </TreeMenu>
+                        </TreeMenuItem>
+                      </TreeMenu>
+                    </TreeMenuItem>
+                  </TreeMenu>
+                </TreeMenuContainer>
+              </Pane>
             </SplitPane>
           </SplitPane>
-          <Pane />
+          <Pane>xx</Pane>
         </SplitPane>
       </SplitPane>
     </>
