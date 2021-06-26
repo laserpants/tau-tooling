@@ -33,9 +33,9 @@ function PaneSection({ title, children }) {
     <AccordionItem>
       <h2>
         <AccordionButton className="no-select" px={2}>
-          <AccordionIcon mr={1} />
+          <AccordionIcon mr={1} fontSize="15px" />
           <Box flex="1" textAlign="left">
-            {title}
+            <Text fontSize="14px">{title}</Text>
           </Box>
         </AccordionButton>
       </h2>
