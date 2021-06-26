@@ -22,6 +22,11 @@ import {
 } from "@chakra-ui/react";
 import { Global, css } from "@emotion/react";
 import { AiFillFolder } from "react-icons/ai";
+import {
+  TreeMenuContainer,
+  TreeMenu,
+  TreeMenuItem,
+} from "./components/TreeMenu";
 
 function PaneSection({ title, children }) {
   return (
@@ -104,24 +109,18 @@ function ModulePane() {
 
 function ModulesList() {
   return (
-    <div className="tree-menu__container">
-      <ul className="tree-menu__ul">
-        <li className="tree-menu__li root">Main</li>
-        <li className="tree-menu__li root">List</li>
-        <li className="tree-menu__li root">
-          <span className="tree-menu__node no-select">
-            <span className="tree-menu__node-icon">
-              <AiFillFolder />
-            </span>
-            <span>List</span>
-          </span>
-          <ul className="tree-menu__ul">
-            <li className="tree-menu__li">List.Extra</li>
-            <li className="tree-menu__li">List.NonEmpty</li>
-          </ul>
-        </li>
-      </ul>
-    </div>
+    <TreeMenuContainer>
+      <TreeMenu>
+        <TreeMenuItem root title="Main" />
+        <TreeMenuItem root title="List" />
+        <TreeMenuItem root icon={AiFillFolder} title="List">
+          <TreeMenu>
+            <TreeMenuItem title="List.Extra" />
+            <TreeMenuItem title="List.NonEmpty" />
+          </TreeMenu>
+        </TreeMenuItem>
+      </TreeMenu>
+    </TreeMenuContainer>
   );
 }
 
