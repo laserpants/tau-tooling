@@ -1,7 +1,7 @@
 import "./App.scss";
+import React, { useState } from "react";
 import Pane from "./components/Pane";
 import PaneSection from "./components/PaneSection";
-import React from "react";
 import SplitPane from "react-split-pane";
 import {
   Accordion,
@@ -115,38 +115,45 @@ function ModulesList() {
   );
 }
 
-function Layout() {
-  const testTree = [
+const Tree = ({ nodes, root = false }) => {
+  return (
+    nodes && (
+      <TreeMenu>
+        {nodes.map(({ nodeName, children }, i) => (
+          <TreeMenuItem 
+            key={i} 
+            root={root} 
+            title={nodeName} 
+            onClick={() => {
+              console.log('click');
+            }}>
+            <Tree nodes={children} />
+          </TreeMenuItem>
+        ))}
+      </TreeMenu>
+    )
+  );
+};
+
+const testTree = [{
+  nodeName: "EFix",
+  expanded: false,
+  path: [0],
+  children: [
     {
-      nodeName: "EFix",
-      expanded: false,
-      children: [
-        {
-          nodeName: "ELam",
-          children: [],
-        },
-        {
-          nodeName: "ELet",
-          children: [],
-        },
-      ],
+      nodeName: "ELam",
+      path: [0, 0],
+      children: [],
     },
-  ];
+    {
+      nodeName: "ELet",
+      path: [0, 1],
+      children: [],
+    },
+  ],
+}];
 
-  const Tree = ({ nodes, root = false }) => {
-    return (
-      nodes && (
-        <TreeMenu>
-          {nodes.map(({ nodeName, children }, i) => (
-            <TreeMenuItem root={root} key={i} title={nodeName}>
-              <Tree nodes={children} />
-            </TreeMenuItem>
-          ))}
-        </TreeMenu>
-      )
-    );
-  };
-
+function Layout() {
   return (
     <>
       <SplitPane split="horizontal" defaultSize={20}>

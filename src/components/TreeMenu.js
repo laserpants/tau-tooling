@@ -8,10 +8,10 @@ export function TreeMenu({ children }) {
   return <ul className="tree-menu__ul">{children}</ul>;
 }
 
-export function TreeMenuItem({ title, icon: Icon, children, root = false }) {
+export function TreeMenuItem({ title, icon: Icon, children, onClick, root = false }) {
   return (
     <li className={`tree-menu__li ${root ? "root" : ""}`}>
-      <span className="tree-menu__node no-select">
+      <span className="tree-menu__node no-select" onClick={onClick || (() => {})}>
         {Icon && (
           <span className="tree-menu__node-icon">
             <Icon />
