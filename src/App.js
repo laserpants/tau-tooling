@@ -21,11 +21,12 @@ import {
   ChakraProvider,
 } from "@chakra-ui/react";
 import { Global, css } from "@emotion/react";
+import { AiFillFolder } from "react-icons/ai";
 
 function PaneSection({ title, children }) {
   return (
     <AccordionItem>
-      <h2 style={{ background: "rgba(0, 0, 0, 0.08)" }}>
+      <h2>
         <AccordionButton className="no-select" px={2}>
           <AccordionIcon mr={1} />
           <Box flex="1" textAlign="left">
@@ -40,13 +41,22 @@ function PaneSection({ title, children }) {
   );
 }
 
-function ModuleInfo() {
-  const TableRow = ({ first, second }) => (
-    <Tr cursor="pointer" _hover={{ background: "rgba(0, 0, 0, 0.08)" }}>
-      <Td py={1}>{first}</Td>
-      <Td py={1}>{second}</Td>
-    </Tr>
+function ModulePane() {
+  const TableCell = ({ children }) => (
+    <Td borderTop="1px solid #e2e8f0" borderBottom="none" py={1}>
+      {children}
+    </Td>
   );
+
+  const TableRow = ({ children }) => {
+    return (
+      <Tr cursor="pointer" _hover={{ background: "rgba(0, 0, 0, 0.04)" }}>
+        {React.Children.toArray(children).map((child, i) => (
+          <React.Fragment key={i}>{child}</React.Fragment>
+        ))}
+      </Tr>
+    );
+  };
 
   return (
     <>
@@ -55,13 +65,36 @@ function ModuleInfo() {
         <PaneSection title="Definitions">
           <Table size="sm">
             <Tbody>
-              <TableRow first="main" second="Int &rarr; IO ()" />
-              <TableRow first="factorial" second="Nat &rarr; Nat" />
-              <TableRow first="toString" second="a &rarr; String" />
+              <TableRow>
+                <TableCell>main</TableCell>
+                <TableCell>Int &rarr; IO ()</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>toString</TableCell>
+                <TableCell>a &rarr; String</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>factorial</TableCell>
+                <TableCell>Nat &rarr; Nat</TableCell>
+              </TableRow>
             </Tbody>
           </Table>
         </PaneSection>
-        <PaneSection title="Type declarations">section 3</PaneSection>
+        <PaneSection title="Type declarations">
+          <Table size="sm">
+            <Tbody>
+              <TableRow>
+                <TableCell>List a</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>Nat</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>Option a</TableCell>
+              </TableRow>
+            </Tbody>
+          </Table>
+        </PaneSection>
         <PaneSection title="Classes">section 4</PaneSection>
         <PaneSection title="Class instances">section 5</PaneSection>
       </Accordion>
@@ -70,7 +103,26 @@ function ModuleInfo() {
 }
 
 function ModulesList() {
-  return <>Main</>;
+  return (
+    <div className="tree-menu__container">
+      <ul className="tree-menu__ul">
+        <li className="tree-menu__li root">Main</li>
+        <li className="tree-menu__li root">List</li>
+        <li className="tree-menu__li root">
+          <span className="tree-menu__node no-select">
+            <span className="tree-menu__node-icon">
+              <AiFillFolder />
+            </span>
+            <span>List</span>
+          </span>
+          <ul className="tree-menu__ul">
+            <li className="tree-menu__li">List.Extra</li>
+            <li className="tree-menu__li">List.NonEmpty</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  );
 }
 
 function Pane({ title, children }) {
@@ -87,7 +139,7 @@ function Pane({ title, children }) {
 function Layout() {
   return (
     <>
-      <SplitPane split="horizontal" defaultSize={100}>
+      <SplitPane split="horizontal" defaultSize={20}>
         <Pane />
         <SplitPane split="horizontal" defaultSize={200} primary="second">
           <SplitPane split="vertical" defaultSize={150}>
@@ -96,7 +148,7 @@ function Layout() {
             </Pane>
             <SplitPane split="vertical" defaultSize={200}>
               <Pane title="Main">
-                <ModuleInfo />
+                <ModulePane />
               </Pane>
               <Pane />
             </SplitPane>

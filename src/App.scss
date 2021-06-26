@@ -52,3 +52,74 @@
 .Resizer.disabled:hover {
   border-color: transparent;
 }
+
+// ----------------------------------------------------------------------------
+// tree-menu
+// ----------------------------------------------------------------------------
+
+.tree-menu__container {
+  padding: 0 0.4em;
+}
+
+ul.tree-menu__ul {
+  margin: 0px 0px 0px 20px; 
+  list-style: none; 
+  /* line-height: 2.1em; */
+
+  li.tree-menu__li {
+    /* font-family: monospace; */
+
+    font-size: 14px;
+    position: relative;
+
+    &:before {
+      position: absolute;
+      left: -15px;
+      top: 0px;
+      content: '';
+      display: block;
+      border-left: 1px solid rgb(145, 133, 140);
+      height: 0.95em;
+      border-bottom: 1px solid rgb(145, 133, 140);
+      width: 10px;
+    }
+
+    &:after {
+      position: absolute;
+      left: -15px;
+      bottom: -7px;
+      content: '';
+      display: block;
+      border-left: 1px solid rgb(145, 133, 140);
+      height: 100%;
+    }
+
+    &.root {
+      margin: 0px 0px 0px -20px;
+
+      &:before {
+        display: none;
+      }
+
+      &:after{
+        display: none;
+      }
+    }
+
+    &:last-child {
+      &:after { 
+        display: none;
+      }
+    }
+  }
+}
+
+.tree-menu__node {
+  display: flex; 
+  flex-direction: row;
+  align-items: center;
+}
+
+.tree-menu__node-icon {
+  margin-right: 0.2em;
+}
