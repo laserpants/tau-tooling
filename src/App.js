@@ -12,7 +12,7 @@ import {
   Tbody,
   ChakraProvider,
 } from "@chakra-ui/react";
-import { AiFillFolder } from "react-icons/ai";
+import { AiFillFolder, AiFillTag } from "react-icons/ai";
 import { FaPlusSquare, FaMinusSquare } from "react-icons/fa";
 import { Global, css } from "@emotion/react";
 import { IoIosArrowDroprightCircle } from "react-icons/io";
@@ -81,7 +81,12 @@ function ModulePane() {
         <Table size="sm">
           <Tbody>
             <TableRow>
-              <TableCell>List a</TableCell>
+              <TableCell>
+                <Box mr={1}>
+                  <AiFillTag />
+                </Box>
+                List a
+              </TableCell>
             </TableRow>
             <TableRow>
               <TableCell>Nat</TableCell>
@@ -115,45 +120,91 @@ function ModulesList() {
   );
 }
 
-const Tree = ({ nodes, root = false }) => {
-  return (
-    nodes && (
-      <TreeMenu>
-        {nodes.map(({ nodeName, children }, i) => (
-          <TreeMenuItem 
-            key={i} 
-            root={root} 
-            title={nodeName} 
-            onClick={() => {
-              console.log('click');
-            }}>
-            <Tree nodes={children} />
-          </TreeMenuItem>
-        ))}
-      </TreeMenu>
-    )
-  );
-};
+function Tree({ nodes, onClick }) {
+  const Subtree = ({ nodes, root = false }) => {
+    return (
+      nodes && (
+        <TreeMenu>
+          {nodes.map(({ nodeName, path, children, expanded }, i) => (
+            <TreeMenuItem
+              key={i}
+              root={root}
+              title={nodeName}
+              onClick={onClick ? onClick.bind(null, path) : () => {}}
+            >
+              <Subtree nodes={expanded ? children : []} />
+            </TreeMenuItem>
+          ))}
+        </TreeMenu>
+      )
+    );
+  };
 
-const testTree = [{
-  nodeName: "EFix",
-  expanded: false,
-  path: [0],
-  children: [
-    {
-      nodeName: "ELam",
-      path: [0, 0],
-      children: [],
-    },
-    {
-      nodeName: "ELet",
-      path: [0, 1],
-      children: [],
-    },
-  ],
-}];
+  return <Subtree nodes={nodes} root={true} />;
+}
+
+const testTree = [
+  {
+    nodeName: "EFix",
+    path: [0],
+    children: [
+      {
+        nodeName: "ELam",
+        path: [0, 0],
+        children: [
+          {
+            nodeName: "ELam",
+            path: [0, 0, 0],
+            children: [],
+          },
+          {
+            nodeName: "ELam",
+            path: [0, 0, 1],
+            children: [],
+          },
+          {
+            nodeName: "ELam",
+            path: [0, 0, 2],
+            children: [],
+          },
+        ],
+      },
+      {
+        nodeName: "ELet",
+        path: [0, 1],
+        children: [
+          {
+            nodeName: "ELam",
+            path: [0, 1, 0],
+            children: [],
+          },
+          {
+            nodeName: "ELam",
+            path: [0, 1, 1],
+            children: [],
+          },
+        ],
+      },
+    ],
+  },
+];
 
 function Layout() {
+  const [treeNodes, setTreeNodes] = useState(testTree);
+
+  const handleClick = (path) => {
+    const updateNode =
+      (path) =>
+      ({ children, expanded, ...node }, i) => {
+        return {
+          ...node,
+          children: children.map(updateNode(path.slice(1))),
+          expanded: 1 === path.length && i === path[0] ? !expanded : expanded,
+        };
+      };
+    setTreeNodes(treeNodes.map(updateNode(path)));
+  };
+
   return (
     <>
       <SplitPane split="horizontal" defaultSize={20}>
@@ -169,8 +220,11 @@ function Layout() {
               </Pane>
               <Pane title="Main.factorial">
                 <TreeMenuContainer>
-                  <Tree nodes={testTree} root={true} />
+                  <Tree nodes={treeNodes} onClick={handleClick} />
                   {/*
+                  <pre style={{ fontSize: '10px' }}>
+                    {JSON.stringify(treeNodes, null, 2)}
+                  </pre>
                   <TreeMenu>
                     <TreeMenuItem root title="Root">
                       <TreeMenu>
