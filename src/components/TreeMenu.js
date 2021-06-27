@@ -50,7 +50,7 @@ export function useMenu(nodes) {
 
   const [treeNodes, setTreeNodes] = useState(nodes.map(insertPath([])));
 
-  const handleClick = (path) => {
+  const handleNodeToggled = (path) => {
     const updateNode =
       (path) =>
       ({ children, expanded, ...node }, i) => {
@@ -81,62 +81,48 @@ export function useMenu(nodes) {
     setTreeNodes,
     collapseAll,
     expandAll,
-    handleClick,
+    handleNodeToggled,
   };
 }
 
-export function Tree({ nodes }) {
-  const {
-    treeNodes,
-    setTreeNodes,
-    collapseAll,
-    expandAll,
-    handleClick,
-  } = useMenu(nodes);
-  
+export function Tree({ nodes, onToggleNode = () => {} }) {
   const Subtree = ({ nodes, root = false }) => {
     return (
-      <>
-        {nodes && (
-          <TreeMenu>
-            {nodes.map(
-              (
-                {
-                  nodeName,
-                  path,
-                  children,
-                  expandedIcon,
-                  collapsedIcon,
-                  icon,
-                  expanded,
-                },
-                i
-              ) => (
-                <TreeMenuItem
-                  key={i}
-                  root={root}
-                  title={nodeName}
-                  icon={
-                    icon
-                      ? icon
-                      : children?.length > 0 &&
-                        (expanded ? expandedIcon : collapsedIcon)
-                  }
-                  onClick={handleClick.bind(null, path)}
-                >
-                  <Subtree nodes={expanded ? children : []} />
-                </TreeMenuItem>
-              )
-            )}
-          </TreeMenu>
-        )}
-      </>
+      nodes && (
+        <TreeMenu>
+          {nodes.map(
+            (
+              {
+                nodeName,
+                path,
+                children,
+                expandedIcon,
+                collapsedIcon,
+                icon,
+                expanded,
+              },
+              i
+            ) => (
+              <TreeMenuItem
+                key={i}
+                root={root}
+                title={nodeName}
+                icon={
+                  icon
+                    ? icon
+                    : children?.length > 0 &&
+                      (expanded ? expandedIcon : collapsedIcon)
+                }
+                onClick={onToggleNode.bind(null, path)}
+              >
+                <Subtree nodes={expanded ? children : []} />
+              </TreeMenuItem>
+            )
+          )}
+        </TreeMenu>
+      )
     );
   };
 
-  return (
-    <>
-      <Subtree nodes={treeNodes} root={true} />
-    </>
-  );
+  return <Subtree nodes={nodes} root={true} />;
 }

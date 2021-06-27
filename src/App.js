@@ -1,5 +1,5 @@
 import "./App.scss";
-import React, { useState } from "react";
+import React from "react";
 import Pane from "./components/Pane";
 import PaneSection from "./components/PaneSection";
 import SplitPane from "react-split-pane";
@@ -10,7 +10,10 @@ import {
   Tr,
   Td,
   Tbody,
-  Spacer, Stack, ButtonGroup, IconButton, Button,
+  Stack,
+  ButtonGroup,
+  IconButton,
+  Button,
   ChakraProvider,
 } from "@chakra-ui/react";
 import { AiFillFolder, AiFillTag } from "react-icons/ai";
@@ -129,9 +132,11 @@ function ModulesList() {
     },
   ];
 
+  const { treeNodes, handleNodeToggled } = useMenu(testTree);
+
   return (
     <TreeMenuContainer>
-      <Tree nodes={testTree} />
+      <Tree nodes={treeNodes} onToggleNode={handleNodeToggled} />
     </TreeMenuContainer>
   );
 }
@@ -181,7 +186,8 @@ function Layout() {
     },
   ];
 
-//  const { treeNodes} = useMenu(testTree);
+  const { treeNodes, handleNodeToggled, collapseAll, expandAll } =
+    useMenu(testTree);
 
   return (
     <SplitPane split="horizontal" defaultSize={20}>
@@ -197,14 +203,14 @@ function Layout() {
             </Pane>
             <Pane title="Main.factorial">
               <TreeMenuContainer>
-                {/*
                 <Stack direction="row" mb={2}>
-                  <IconButton variant="outline" onClick={collapseAll} size="xs" icon={<BiCollapse />} />
-                  <IconButton variant="outline" onClick={expandAll} size="xs" icon={<BiExpand />} />
+                  <ButtonGroup variant="outline" size="xs" spacing="1">
+                    <Button borderRadius={0}>New</Button>
+                    <IconButton onClick={collapseAll} icon={<BiCollapse />} />
+                    <IconButton onClick={expandAll} icon={<BiExpand />} />
+                  </ButtonGroup>
                 </Stack>
-                */}
-
-                <Tree nodes={testTree} />
+                <Tree nodes={treeNodes} onToggleNode={handleNodeToggled} />
                 {/*
                   <pre style={{ fontSize: '10px' }}>
                     {JSON.stringify(treeNodes, null, 2)}
