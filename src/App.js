@@ -16,16 +16,11 @@ import { AiFillFolder, AiFillTag } from "react-icons/ai";
 import { FaPlusSquare, FaMinusSquare } from "react-icons/fa";
 import { Global, css } from "@emotion/react";
 import { IoIosArrowDroprightCircle } from "react-icons/io";
-import {
-  TreeMenuContainer,
-  TreeMenu,
-  TreeMenuItem,
-  Tree,
-} from "./components/TreeMenu";
+import { TreeMenuContainer, Tree } from "./components/TreeMenu";
 
 function ModulePane() {
   const TableCell = ({ children }) => (
-    <Td borderTop="1px solid #e2e8f0" borderBottom="none" py={1} px={3}>
+    <Td borderTop="1px solid #e2e8f0" borderBottom="none" py={2} px={3}>
       <Box d="flex" alignItems="center">
         {children}
       </Box>
@@ -135,18 +130,6 @@ function ModulesList() {
   return (
     <TreeMenuContainer>
       <Tree nodes={testTree} />
-      {/*
-      <TreeMenu>
-        <TreeMenuItem root title="Main" />
-        <TreeMenuItem root title="List" />
-        <TreeMenuItem root icon={AiFillFolder} title="List">
-          <TreeMenu>
-            <TreeMenuItem title="List.Extra" />
-            <TreeMenuItem title="List.NonEmpty" />
-          </TreeMenu>
-        </TreeMenuItem>
-      </TreeMenu>
-      */}
     </TreeMenuContainer>
   );
 }
@@ -197,48 +180,32 @@ function Layout() {
   ];
 
   return (
-    <>
-      <SplitPane split="horizontal" defaultSize={20}>
-        <Pane />
-        <SplitPane split="horizontal" defaultSize={200} primary="second">
-          <SplitPane split="vertical" defaultSize={150}>
-            <Pane title="Modules">
-              <ModulesList />
+    <SplitPane split="horizontal" defaultSize={20}>
+      <Pane />
+      <SplitPane split="horizontal" defaultSize={200} primary="second">
+        <SplitPane split="vertical" defaultSize={150}>
+          <Pane title="Modules">
+            <ModulesList />
+          </Pane>
+          <SplitPane split="vertical" defaultSize={200}>
+            <Pane title="Main">
+              <ModulePane />
             </Pane>
-            <SplitPane split="vertical" defaultSize={200}>
-              <Pane title="Main">
-                <ModulePane />
-              </Pane>
-              <Pane title="Main.factorial">
-                <TreeMenuContainer>
-                  <Tree nodes={testTree} />
-                  {/*
+            <Pane title="Main.factorial">
+              <TreeMenuContainer>
+                <Tree nodes={testTree} />
+                {/*
                   <pre style={{ fontSize: '10px' }}>
                     {JSON.stringify(treeNodes, null, 2)}
                   </pre>
-                  <TreeMenu>
-                    <TreeMenuItem root title="Root">
-                      <TreeMenu>
-                        <TreeMenuItem title="Main" />
-                        <TreeMenuItem title="List" />
-                        <TreeMenuItem icon={FaPlusSquare} title="List">
-                          <TreeMenu>
-                            <TreeMenuItem title="List.Extra" />
-                            <TreeMenuItem title="List.NonEmpty" />
-                          </TreeMenu>
-                        </TreeMenuItem>
-                      </TreeMenu>
-                    </TreeMenuItem>
-                  </TreeMenu>
-                  */}
-                </TreeMenuContainer>
-              </Pane>
-            </SplitPane>
+                */}
+              </TreeMenuContainer>
+            </Pane>
           </SplitPane>
-          <Pane>xx</Pane>
         </SplitPane>
+        <Pane>xx</Pane>
       </SplitPane>
-    </>
+    </SplitPane>
   );
 }
 

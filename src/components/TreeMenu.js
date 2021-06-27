@@ -63,43 +63,62 @@ export function Tree({ nodes }) {
     setTreeNodes(treeNodes.map(updateNode(path)));
   };
 
+  const expandAll = (expanded = true) => {
+    const expand = ({ children, ...node }) => {
+      return {
+        ...node,
+        children: children.map(expand),
+        expanded,
+      };
+    };
+    setTreeNodes(treeNodes.map(expand));
+  };
+
   const Subtree = ({ nodes, root = false }) => {
     return (
-      nodes && (
-        <TreeMenu>
-          {nodes.map(
-            (
-              {
-                nodeName,
-                path,
-                children,
-                expandedIcon,
-                collapsedIcon,
-                icon,
-                expanded,
-              },
-              i
-            ) => (
-              <TreeMenuItem
-                key={i}
-                root={root}
-                title={nodeName}
-                icon={
-                  icon
-                    ? icon
-                    : children?.length > 0 &&
-                      (expanded ? expandedIcon : collapsedIcon)
-                }
-                onClick={handleClick.bind(null, path)}
-              >
-                <Subtree nodes={expanded ? children : []} />
-              </TreeMenuItem>
-            )
-          )}
-        </TreeMenu>
-      )
+      <>
+        {nodes && (
+          <TreeMenu>
+            {nodes.map(
+              (
+                {
+                  nodeName,
+                  path,
+                  children,
+                  expandedIcon,
+                  collapsedIcon,
+                  icon,
+                  expanded,
+                },
+                i
+              ) => (
+                <TreeMenuItem
+                  key={i}
+                  root={root}
+                  title={nodeName}
+                  icon={
+                    icon
+                      ? icon
+                      : children?.length > 0 &&
+                        (expanded ? expandedIcon : collapsedIcon)
+                  }
+                  onClick={handleClick.bind(null, path)}
+                >
+                  <Subtree nodes={expanded ? children : []} />
+                </TreeMenuItem>
+              )
+            )}
+          </TreeMenu>
+        )}
+      </>
     );
   };
 
-  return <Subtree nodes={treeNodes} root={true} />;
+  return (
+    <>
+      <div onClick={expandAll}>Expand all</div>
+      <div onClick={expandAll.bind(null, false)}>Collapse all</div>
+      <Subtree nodes={treeNodes} root={true} />
+    </>
+  );
 }
