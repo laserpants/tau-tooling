@@ -36,7 +36,7 @@ export function TreeMenuItem({
   );
 }
 
-export function Tree({ nodes }) {
+export function useMenu(nodes) {
   const insertPath =
     (parentPath) =>
     ({ children, ...node }, i) => {
@@ -74,6 +74,26 @@ export function Tree({ nodes }) {
     setTreeNodes(treeNodes.map(expand));
   };
 
+  const collapseAll = expandAll.bind(null, false);
+
+  return {
+    treeNodes,
+    setTreeNodes,
+    collapseAll,
+    expandAll,
+    handleClick,
+  };
+}
+
+export function Tree({ nodes }) {
+  const {
+    treeNodes,
+    setTreeNodes,
+    collapseAll,
+    expandAll,
+    handleClick,
+  } = useMenu(nodes);
+  
   const Subtree = ({ nodes, root = false }) => {
     return (
       <>
@@ -116,8 +136,6 @@ export function Tree({ nodes }) {
 
   return (
     <>
-      <div onClick={expandAll}>Expand all</div>
-      <div onClick={expandAll.bind(null, false)}>Collapse all</div>
       <Subtree nodes={treeNodes} root={true} />
     </>
   );

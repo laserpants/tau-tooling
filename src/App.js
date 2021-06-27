@@ -10,13 +10,15 @@ import {
   Tr,
   Td,
   Tbody,
+  Spacer, Stack, ButtonGroup, IconButton, Button,
   ChakraProvider,
 } from "@chakra-ui/react";
 import { AiFillFolder, AiFillTag } from "react-icons/ai";
 import { FaPlusSquare, FaMinusSquare } from "react-icons/fa";
 import { Global, css } from "@emotion/react";
 import { IoIosArrowDroprightCircle } from "react-icons/io";
-import { TreeMenuContainer, Tree } from "./components/TreeMenu";
+import { TreeMenuContainer, Tree, useMenu } from "./components/TreeMenu";
+import { BiCollapse, BiExpand } from "react-icons/bi";
 
 function ModulePane() {
   const TableCell = ({ children }) => (
@@ -179,6 +181,8 @@ function Layout() {
     },
   ];
 
+//  const { treeNodes} = useMenu(testTree);
+
   return (
     <SplitPane split="horizontal" defaultSize={20}>
       <Pane />
@@ -193,6 +197,13 @@ function Layout() {
             </Pane>
             <Pane title="Main.factorial">
               <TreeMenuContainer>
+                {/*
+                <Stack direction="row" mb={2}>
+                  <IconButton variant="outline" onClick={collapseAll} size="xs" icon={<BiCollapse />} />
+                  <IconButton variant="outline" onClick={expandAll} size="xs" icon={<BiExpand />} />
+                </Stack>
+                */}
+
                 <Tree nodes={testTree} />
                 {/*
                   <pre style={{ fontSize: '10px' }}>
