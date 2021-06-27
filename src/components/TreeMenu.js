@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 export function TreeMenuContainer({ children }) {
   return <div className="tree-menu__container">{children}</div>;
@@ -34,4 +34,72 @@ export function TreeMenuItem({
       {children}
     </li>
   );
+}
+
+export function Tree({ nodes }) {
+  const insertPath =
+    (parentPath) =>
+    ({ children, ...node }, i) => {
+      const path = [...parentPath, i];
+      return {
+        ...node,
+        path,
+        children: children.map(insertPath(path)),
+      };
+    };
+
+  const [treeNodes, setTreeNodes] = useState(nodes.map(insertPath([])));
+
+  const handleClick = (path) => {
+    const updateNode =
+      (path) =>
+      ({ children, expanded, ...node }, i) => {
+        return {
+          ...node,
+          children: children.map(updateNode(path.slice(1))),
+          expanded: 1 === path.length && i === path[0] ? !expanded : expanded,
+        };
+      };
+    setTreeNodes(treeNodes.map(updateNode(path)));
+  };
+
+  const Subtree = ({ nodes, root = false }) => {
+    return (
+      nodes && (
+        <TreeMenu>
+          {nodes.map(
+            (
+              {
+                nodeName,
+                path,
+                children,
+                expandedIcon,
+                collapsedIcon,
+                icon,
+                expanded,
+              },
+              i
+            ) => (
+              <TreeMenuItem
+                key={i}
+                root={root}
+                title={nodeName}
+                icon={
+                  icon
+                    ? icon
+                    : children?.length > 0 &&
+                      (expanded ? expandedIcon : collapsedIcon)
+                }
+                onClick={handleClick.bind(null, path)}
+              >
+                <Subtree nodes={expanded ? children : []} />
+              </TreeMenuItem>
+            )
+          )}
+        </TreeMenu>
+      )
+    );
+  };
+
+  return <Subtree nodes={treeNodes} root={true} />;
 }

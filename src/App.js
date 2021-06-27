@@ -20,6 +20,7 @@ import {
   TreeMenuContainer,
   TreeMenu,
   TreeMenuItem,
+  Tree,
 } from "./components/TreeMenu";
 
 function ModulePane() {
@@ -104,8 +105,37 @@ function ModulePane() {
 }
 
 function ModulesList() {
+  const testTree = [
+    {
+      nodeName: "Main",
+      children: [],
+    },
+    {
+      nodeName: "List",
+      children: [],
+    },
+    {
+      nodeName: "List",
+      expandedIcon: AiFillFolder,
+      collapsedIcon: AiFillFolder,
+      expanded: true,
+      children: [
+        {
+          nodeName: "List.Extra",
+          children: [],
+        },
+        {
+          nodeName: "List.NonEmpty",
+          children: [],
+        },
+      ],
+    },
+  ];
+
   return (
     <TreeMenuContainer>
+      <Tree nodes={testTree} />
+      {/*
       <TreeMenu>
         <TreeMenuItem root title="Main" />
         <TreeMenuItem root title="List" />
@@ -116,94 +146,55 @@ function ModulesList() {
           </TreeMenu>
         </TreeMenuItem>
       </TreeMenu>
+      */}
     </TreeMenuContainer>
   );
 }
 
-function Tree({ nodes, onClick }) {
-  const Subtree = ({ nodes, root = false }) => {
-    return (
-      nodes && (
-        <TreeMenu>
-          {nodes.map(({ nodeName, path, children, expanded }, i) => (
-            <TreeMenuItem
-              key={i}
-              root={root}
-              title={nodeName}
-              onClick={onClick ? onClick.bind(null, path) : () => {}}
-            >
-              <Subtree nodes={expanded ? children : []} />
-            </TreeMenuItem>
-          ))}
-        </TreeMenu>
-      )
-    );
-  };
-
-  return <Subtree nodes={nodes} root={true} />;
-}
-
-const testTree = [
-  {
-    nodeName: "EFix",
-    path: [0],
-    children: [
-      {
-        nodeName: "ELam",
-        path: [0, 0],
-        children: [
-          {
-            nodeName: "ELam",
-            path: [0, 0, 0],
-            children: [],
-          },
-          {
-            nodeName: "ELam",
-            path: [0, 0, 1],
-            children: [],
-          },
-          {
-            nodeName: "ELam",
-            path: [0, 0, 2],
-            children: [],
-          },
-        ],
-      },
-      {
-        nodeName: "ELet",
-        path: [0, 1],
-        children: [
-          {
-            nodeName: "ELam",
-            path: [0, 1, 0],
-            children: [],
-          },
-          {
-            nodeName: "ELam",
-            path: [0, 1, 1],
-            children: [],
-          },
-        ],
-      },
-    ],
-  },
-];
-
 function Layout() {
-  const [treeNodes, setTreeNodes] = useState(testTree);
-
-  const handleClick = (path) => {
-    const updateNode =
-      (path) =>
-      ({ children, expanded, ...node }, i) => {
-        return {
-          ...node,
-          children: children.map(updateNode(path.slice(1))),
-          expanded: 1 === path.length && i === path[0] ? !expanded : expanded,
-        };
-      };
-    setTreeNodes(treeNodes.map(updateNode(path)));
-  };
+  const testTree = [
+    {
+      nodeName: "EFix",
+      expandedIcon: FaMinusSquare,
+      collapsedIcon: FaPlusSquare,
+      children: [
+        {
+          nodeName: "ELam",
+          expandedIcon: FaMinusSquare,
+          collapsedIcon: FaPlusSquare,
+          children: [
+            {
+              nodeName: "ELam",
+              children: [],
+            },
+            {
+              nodeName: "ELam",
+              children: [],
+            },
+            {
+              nodeName: "ELam",
+              children: [],
+            },
+          ],
+        },
+        {
+          nodeName: "ELet",
+          expandedIcon: FaMinusSquare,
+          collapsedIcon: FaPlusSquare,
+          children: [
+            {
+              nodeName: "ELam",
+              children: [],
+            },
+            {
+              nodeName: "ELam",
+              children: [],
+            },
+          ],
+        },
+      ],
+    },
+  ];
 
   return (
     <>
@@ -220,7 +211,7 @@ function Layout() {
               </Pane>
               <Pane title="Main.factorial">
                 <TreeMenuContainer>
-                  <Tree nodes={treeNodes} onClick={handleClick} />
+                  <Tree nodes={testTree} />
                   {/*
                   <pre style={{ fontSize: '10px' }}>
                     {JSON.stringify(treeNodes, null, 2)}
