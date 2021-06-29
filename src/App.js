@@ -7,6 +7,11 @@ import {
   Accordion,
   Box,
   Table,
+  Tabs,
+  TabList,
+  TabPanels,
+  TabPanel,
+  Tab,
   Tr,
   Td,
   Tbody,
@@ -202,21 +207,42 @@ function Layout() {
               <ModulePane />
             </Pane>
             <Pane title="Main.factorial">
-              <TreeMenuContainer>
-                <Stack direction="row" mb={2}>
-                  <ButtonGroup variant="outline" size="xs" spacing="1">
-                    <Button borderRadius={0}>New</Button>
-                    <IconButton onClick={collapseAll} icon={<BiCollapse />} />
-                    <IconButton onClick={expandAll} icon={<BiExpand />} />
-                  </ButtonGroup>
-                </Stack>
-                <Tree nodes={treeNodes} onToggleNode={handleNodeToggled} />
-                {/*
+              <Tabs size="sm" width="100%" height="100%">
+                <TabList>
+                  <Tab>Source tree</Tab>
+                  <Tab>S1</Tab>
+                  <Tab>S2</Tab>
+                  <Tab>S3</Tab>
+                  <Tab>S4</Tab>
+                  <Tab>S5</Tab>
+                  <Tab>Core</Tab>
+                  <Tab>Evaluated</Tab>
+                </TabList>
+                <TabPanels
+                  height="100%"
+                  overflow="auto"
+                  className="tree-menu__container"
+                >
+                  <TabPanel>
+                    <Stack direction="row" mb={2}>
+                      <ButtonGroup variant="outline" size="xs" spacing="1">
+                        <Button borderRadius={0}>New</Button>
+                        <IconButton
+                          onClick={collapseAll}
+                          icon={<BiCollapse />}
+                        />
+                        <IconButton onClick={expandAll} icon={<BiExpand />} />
+                      </ButtonGroup>
+                    </Stack>
+                    <Tree nodes={treeNodes} onToggleNode={handleNodeToggled} />
+                    {/*
                   <pre style={{ fontSize: '10px' }}>
                     {JSON.stringify(treeNodes, null, 2)}
                   </pre>
                 */}
-              </TreeMenuContainer>
+                  </TabPanel>
+                </TabPanels>
+              </Tabs>
             </Pane>
           </SplitPane>
         </SplitPane>
