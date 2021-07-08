@@ -1,5 +1,6 @@
 import "./App.scss";
 import React from "react";
+import ExprPipeline from "./components/ExprPipeline";
 import Pane from "./components/Pane";
 import PaneSection from "./components/PaneSection";
 import SplitPane from "react-split-pane";
@@ -7,26 +8,15 @@ import {
   Accordion,
   Box,
   Table,
-  Tabs,
-  TabList,
-  TabPanels,
-  TabPanel,
-  Tab,
   Tr,
   Td,
   Tbody,
-  Stack,
-  ButtonGroup,
-  IconButton,
-  Button,
   ChakraProvider,
 } from "@chakra-ui/react";
 import { AiFillFolder, AiFillTag } from "react-icons/ai";
-import { FaPlusSquare, FaMinusSquare } from "react-icons/fa";
 import { Global, css } from "@emotion/react";
 import { IoIosArrowDroprightCircle } from "react-icons/io";
 import { TreeMenuContainer, Tree, useMenu } from "./components/TreeMenu";
-import { BiCollapse, BiExpand } from "react-icons/bi";
 
 function ModulePane() {
   const TableCell = ({ children }) => (
@@ -147,53 +137,6 @@ function ModulesList() {
 }
 
 function Layout() {
-  const testTree = [
-    {
-      nodeName: "EFix",
-      expandedIcon: FaMinusSquare,
-      collapsedIcon: FaPlusSquare,
-      children: [
-        {
-          nodeName: "ELam",
-          expandedIcon: FaMinusSquare,
-          collapsedIcon: FaPlusSquare,
-          children: [
-            {
-              nodeName: "ELam",
-              children: [],
-            },
-            {
-              nodeName: "ELam",
-              children: [],
-            },
-            {
-              nodeName: "ELam",
-              children: [],
-            },
-          ],
-        },
-        {
-          nodeName: "ELet",
-          expandedIcon: FaMinusSquare,
-          collapsedIcon: FaPlusSquare,
-          children: [
-            {
-              nodeName: "ELam",
-              children: [],
-            },
-            {
-              nodeName: "ELam",
-              children: [],
-            },
-          ],
-        },
-      ],
-    },
-  ];
-
-  const { treeNodes, handleNodeToggled, collapseAll, expandAll } =
-    useMenu(testTree);
-
   return (
     <SplitPane split="horizontal" defaultSize={20}>
       <Pane />
@@ -207,42 +150,7 @@ function Layout() {
               <ModulePane />
             </Pane>
             <Pane title="Main.factorial">
-              <Tabs size="sm" width="100%" height="100%">
-                <TabList>
-                  <Tab>Source tree</Tab>
-                  <Tab>S1</Tab>
-                  <Tab>S2</Tab>
-                  <Tab>S3</Tab>
-                  <Tab>S4</Tab>
-                  <Tab>S5</Tab>
-                  <Tab>Core</Tab>
-                  <Tab>Evaluated</Tab>
-                </TabList>
-                <TabPanels
-                  height="100%"
-                  overflow="auto"
-                  className="tree-menu__container"
-                >
-                  <TabPanel>
-                    <Stack direction="row" mb={2}>
-                      <ButtonGroup variant="outline" size="xs" spacing="1">
-                        <Button borderRadius={0}>New</Button>
-                        <IconButton
-                          onClick={collapseAll}
-                          icon={<BiCollapse />}
-                        />
-                        <IconButton onClick={expandAll} icon={<BiExpand />} />
-                      </ButtonGroup>
-                    </Stack>
-                    <Tree nodes={treeNodes} onToggleNode={handleNodeToggled} />
-                    {/*
-                  <pre style={{ fontSize: '10px' }}>
-                    {JSON.stringify(treeNodes, null, 2)}
-                  </pre>
-                */}
-                  </TabPanel>
-                </TabPanels>
-              </Tabs>
+              <ExprPipeline />
             </Pane>
           </SplitPane>
         </SplitPane>
