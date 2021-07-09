@@ -56,7 +56,11 @@ export function useMenu(nodes) {
       ({ children, expanded, ...node }, i) => {
         return {
           ...node,
-          children: children.map(updateNode(path.slice(1))),
+          children: children.map((child, j) =>
+            path.length > 1 && j === path[1]
+              ? updateNode(path.slice(1))(child, j)
+              : child
+          ),
           expanded: 1 === path.length && i === path[0] ? !expanded : expanded,
         };
       };

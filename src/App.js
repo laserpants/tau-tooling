@@ -17,6 +17,7 @@ import { AiFillFolder, AiFillTag } from "react-icons/ai";
 import { Global, css } from "@emotion/react";
 import { IoIosArrowDroprightCircle } from "react-icons/io";
 import { TreeMenuContainer, Tree, useMenu } from "./components/TreeMenu";
+import bundle from "./tmp/bundle";
 
 function ModulePane() {
   const TableCell = ({ children }) => (
@@ -175,8 +176,11 @@ function App() {
   return (
     <ChakraProvider>
       <Global styles={GlobalStyles} />
-      <Box w="100%" h="100vh">
+      <Box w="100%">
+        {/*
         <Layout />
+        */}
+        <ExprPipeline bundle={bundle} />
       </Box>
     </ChakraProvider>
   );

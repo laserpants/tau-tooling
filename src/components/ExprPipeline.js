@@ -14,50 +14,85 @@ import { FaPlusSquare, FaMinusSquare } from "react-icons/fa";
 import { BiCollapse, BiExpand } from "react-icons/bi";
 import { Tree, useMenu } from "./TreeMenu";
 
-function ExprPipeline() {
-  const testTree = [
-    {
-      nodeName: "EFix",
+function build(obj) {
+  if (Array.isArray(obj)) {
+    return {
+      nodeName: "<collection>",
       expandedIcon: FaMinusSquare,
       collapsedIcon: FaPlusSquare,
-      children: [
-        {
-          nodeName: "ELam",
-          expandedIcon: FaMinusSquare,
-          collapsedIcon: FaPlusSquare,
-          children: [
-            {
-              nodeName: "ELam",
-              children: [],
-            },
-            {
-              nodeName: "ELam",
-              children: [],
-            },
-            {
-              nodeName: "ELam",
-              children: [],
-            },
-          ],
-        },
-        {
-          nodeName: "ELet",
-          expandedIcon: FaMinusSquare,
-          collapsedIcon: FaPlusSquare,
-          children: [
-            {
-              nodeName: "ELam",
-              children: [],
-            },
-            {
-              nodeName: "ELam",
-              children: [],
-            },
-          ],
-        },
-      ],
-    },
-  ];
+      children: obj.map(build),
+    };
+  }
+
+  if (!obj || !obj.meta) {
+    return {
+      nodeName: obj,
+      expandedIcon: FaMinusSquare,
+      collapsedIcon: FaPlusSquare,
+      children: [],
+    };
+  }
+
+  const [datatype, con] = obj.meta;
+
+  return {
+    nodeName: con,
+    expandedIcon: FaMinusSquare,
+    collapsedIcon: FaPlusSquare,
+    children: Array.isArray(obj.children) ? obj.children.map(build) : [],
+  };
+}
+
+function ExprPipeline({ bundle }) {
+  //console.log(bundle.stage1);
+
+  console.log(build(bundle.stage1));
+
+  const testTree = [build(bundle.stage1)];
+
+  //  const testTree = [
+  //    {
+  //      nodeName: "EFix",
+  //      expandedIcon: FaMinusSquare,
+  //      collapsedIcon: FaPlusSquare,
+  //      children: [
+  //        {
+  //          nodeName: "ELam",
+  //          expandedIcon: FaMinusSquare,
+  //          collapsedIcon: FaPlusSquare,
+  //          children: [
+  //            {
+  //              nodeName: "ELam",
+  //              children: [],
+  //            },
+  //            {
+  //              nodeName: "ELam",
+  //              children: [],
+  //            },
+  //            {
+  //              nodeName: "ELam",
+  //              children: [],
+  //            },
+  //          ],
+  //        },
+  //        {
+  //          nodeName: "ELet",
+  //          expandedIcon: FaMinusSquare,
+  //          collapsedIcon: FaPlusSquare,
+  //          children: [
+  //            {
+  //              nodeName: "ELam",
+  //              children: [],
+  //            },
+  //            {
+  //              nodeName: "ELam",
+  //              children: [],
+  //            },
+  //          ],
+  //        },
+  //      ],
+  //    },
+  //  ];
 
   const { treeNodes, handleNodeToggled, collapseAll, expandAll } =
     useMenu(testTree);
@@ -74,7 +109,7 @@ function ExprPipeline() {
         <Tab>Core</Tab>
         <Tab>Evaluated</Tab>
       </TabList>
-      <TabPanels height="100%" overflow="auto" className="tree-menu__container">
+      <TabPanels h="100%" overflow="auto" className="tree-menu__container">
         <TabPanel>
           <Stack direction="row" mb={2}>
             <ButtonGroup variant="outline" size="xs" spacing="1">
