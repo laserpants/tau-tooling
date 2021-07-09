@@ -15,20 +15,23 @@ import { BiCollapse, BiExpand } from "react-icons/bi";
 import { Tree, useMenu } from "./TreeMenu";
 
 function build(obj) {
+  let attributes = {
+    expandedIcon: FaMinusSquare,
+    collapsedIcon: FaPlusSquare,
+  };
+
   if (Array.isArray(obj)) {
     return {
-      nodeName: "<collection>",
-      expandedIcon: FaMinusSquare,
-      collapsedIcon: FaPlusSquare,
+      ...attributes,
+      nodeName: "[]",
       children: obj.map(build),
     };
   }
 
-  if (!obj || !obj.meta) {
+  if (!obj.meta) {
     return {
+      ...attributes,
       nodeName: obj,
-      expandedIcon: FaMinusSquare,
-      collapsedIcon: FaPlusSquare,
       children: [],
     };
   }
@@ -36,63 +39,15 @@ function build(obj) {
   const [datatype, con] = obj.meta;
 
   return {
+    ...attributes,
     nodeName: con,
-    expandedIcon: FaMinusSquare,
-    collapsedIcon: FaPlusSquare,
+    datatype,
     children: Array.isArray(obj.children) ? obj.children.map(build) : [],
   };
 }
 
 function ExprPipeline({ bundle }) {
-  //console.log(bundle.stage1);
-
-  console.log(build(bundle.stage1));
-
   const testTree = [build(bundle.stage1)];
-
-  //  const testTree = [
-  //    {
-  //      nodeName: "EFix",
-  //      expandedIcon: FaMinusSquare,
-  //      collapsedIcon: FaPlusSquare,
-  //      children: [
-  //        {
-  //          nodeName: "ELam",
-  //          expandedIcon: FaMinusSquare,
-  //          collapsedIcon: FaPlusSquare,
-  //          children: [
-  //            {
-  //              nodeName: "ELam",
-  //              children: [],
-  //            },
-  //            {
-  //              nodeName: "ELam",
-  //              children: [],
-  //            },
-  //            {
-  //              nodeName: "ELam",
-  //              children: [],
-  //            },
-  //          ],
-  //        },
-  //        {
-  //          nodeName: "ELet",
-  //          expandedIcon: FaMinusSquare,
-  //          collapsedIcon: FaPlusSquare,
-  //          children: [
-  //            {
-  //              nodeName: "ELam",
-  //              children: [],
-  //            },
-  //            {
-  //              nodeName: "ELam",
-  //              children: [],
-  //            },
-  //          ],
-  //        },
-  //      ],
-  //    },
-  //  ];
 
   const { treeNodes, handleNodeToggled, collapseAll, expandAll } =
     useMenu(testTree);
@@ -119,11 +74,6 @@ function ExprPipeline({ bundle }) {
             </ButtonGroup>
           </Stack>
           <Tree nodes={treeNodes} onToggleNode={handleNodeToggled} />
-          {/*
-                  <pre style={{ fontSize: '10px' }}>
-                    {JSON.stringify(treeNodes, null, 2)}
-                  </pre>
-                */}
         </TabPanel>
       </TabPanels>
     </Tabs>
