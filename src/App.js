@@ -137,7 +137,7 @@ function ModulesList() {
   );
 }
 
-function Layout() {
+function Layout() { // eslint-disable-line no-unused-vars
   return (
     <SplitPane split="horizontal" defaultSize={20}>
       <Pane />
