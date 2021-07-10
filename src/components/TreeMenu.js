@@ -63,6 +63,14 @@ function getAttributes(datatype, con, children, args) {
             ...getTypeInfo(t),
           };
         }
+        case "ELam": {
+          const [t, e1, e2] = children;
+
+          return {
+            children: [builder(e1), builder(e2)],
+            ...getTypeInfo(t),
+          };
+        }
         default:
           break;
       }
