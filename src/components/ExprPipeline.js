@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Tabs,
   TabList,
@@ -12,15 +12,33 @@ import {
 } from "@chakra-ui/react";
 import { BiCollapse, BiExpand } from "react-icons/bi";
 import { Tree, useMenu, builder } from "./TreeMenu";
+import treeWorker from "../worker.js";
 
 function ExprPipeline({ bundle }) {
   const ExprTree = ({ tree }) => {
-    const { treeNodes, handleNodeToggled, collapseAll, expandAll } = useMenu([
-      builder(tree),
-    ]);
+    const [myTree, setMyTree] = useState();
+
+    useEffect(() => {
+      const worker = new Worker(treeWorker);
+
+      worker.onmessage = ({ data }) => {
+        switch (data.type) {
+          case "ON_SUCCESS":
+            setMyTree(data.payload);
+          default:
+            break;
+        }
+      };
+      worker.postMessage([tree]);
+    }, [tree, setMyTree]);
+
+    //const { treeNodes, handleNodeToggled, collapseAll, expandAll } = useMenu([
+    //  builder(tree),
+    //]);
 
     return (
       <>
+        {/*
         <Stack direction="row" mb={2}>
           <ButtonGroup variant="outline" size="xs" spacing="1">
             <Button borderRadius={0}>New</Button>
@@ -28,7 +46,13 @@ function ExprPipeline({ bundle }) {
             <IconButton onClick={expandAll} icon={<BiExpand />} />
           </ButtonGroup>
         </Stack>
-        <Tree nodes={treeNodes} onToggleNode={handleNodeToggled} />
+        */}
+        {myTree && <Tree nodes={[myTree]} />}
+        {/*
+        <pre>
+          {JSON.stringify(myTree, null, 2)}
+        </pre>
+        */}
       </>
     );
   };
