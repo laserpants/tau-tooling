@@ -1,6 +1,79 @@
 import React, { useState } from "react";
 import { FaPlusSquare, FaMinusSquare } from "react-icons/fa";
 
+function getTypeInfo({ children, meta: [datatype, con], pretty }) {
+  const kind = ({ meta: [, con], children }) => {
+    switch (con) {
+      case "TVar":
+      case "TCon":
+      case "TApp":
+        const [k] = children;
+        return k.pretty;
+      case "TRow":
+        return "Row";
+      default:
+        return "*";
+    }
+  };
+
+  switch (datatype) {
+    case "TypeInfoT": {
+      const [errors, ty, predicates] = children;
+
+      return {
+        typeAnnotation: ty.pretty,
+        kindAnnotation: kind(ty),
+        classPredicates: predicates.children.map(builder),
+        errors: errors.children.map(builder),
+      };
+    }
+    case "Type": {
+      return {
+        typeAnnotation: pretty,
+        kindAnnotation: kind({ meta: [datatype, con], children }),
+        classPredicates: [],
+        errors: [],
+      };
+    }
+    default:
+      break;
+  }
+  return {};
+}
+
+function getAttributes(datatype, con, children, args) {
+  switch (datatype) {
+    case "Expr": {
+      switch (con) {
+        case "EVar": {
+          const [t, name] = children;
+
+          return {
+            argument: name,
+            children: [],
+            ...getTypeInfo(t),
+          };
+        }
+        case "EFix": {
+          const [t, name, e1, e2] = children;
+
+          return {
+            argument: name,
+            children: [builder(e1), builder(e2)],
+            ...getTypeInfo(t),
+          };
+        }
+        default:
+          break;
+      }
+      break;
+    }
+    default:
+      break;
+  }
+  return {};
+}
+
 export function builder(obj) {
   const attributes = {
     expandedIcon: FaMinusSquare,
@@ -23,13 +96,18 @@ export function builder(obj) {
     };
   }
 
-  const [datatype, con] = obj.meta;
+  const {
+    meta: [datatype, con],
+    children,
+    ...args
+  } = obj;
 
   return {
     ...attributes,
     nodeName: con,
     datatype,
     children: Array.isArray(obj.children) ? obj.children.map(builder) : [],
+    ...getAttributes(datatype, con, children, args),
   };
 }
 
@@ -44,6 +122,8 @@ export function TreeMenu({ children }) {
 export function TreeMenuItem({
   title,
   icon: Icon,
+  typeAnnotation,
+  kindAnnotation,
   children,
   onClick,
   root = false,
@@ -62,7 +142,12 @@ export function TreeMenuItem({
             <Icon />
           </span>
         )}
-        <span>{title}</span>
+        <span className="tree-menu__node-title">{title}</span>
+        {typeAnnotation && (
+          <span className="tree-menu__node-annotation">
+            {`: ${typeAnnotation} :: ${kindAnnotation}`}
+          </span>
+        )}
       </span>
       {children}
     </li>
@@ -124,6 +209,7 @@ export function useMenu(nodes) {
 
 export function Tree({ nodes, onToggleNode = () => {} }) {
   const Subtree = ({ nodes, root = false }) => {
+    console.log(nodes);
     return (
       nodes && (
         <TreeMenu>
@@ -135,6 +221,8 @@ export function Tree({ nodes, onToggleNode = () => {} }) {
                 children,
                 expandedIcon,
                 collapsedIcon,
+                typeAnnotation,
+                kindAnnotation,
                 icon,
                 expanded,
               },
@@ -144,6 +232,8 @@ export function Tree({ nodes, onToggleNode = () => {} }) {
                 key={i}
                 root={root}
                 title={nodeName}
+                typeAnnotation={typeAnnotation}
+                kindAnnotation={kindAnnotation}
                 icon={
                   icon
                     ? icon
