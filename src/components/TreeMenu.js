@@ -140,6 +140,7 @@ export function TreeMenuItem({
   icon: Icon,
   typeAnnotation,
   kindAnnotation,
+  argument,
   children,
   onClick,
   root = false,
@@ -155,10 +156,15 @@ export function TreeMenuItem({
       >
         {Icon && (
           <span className="tree-menu__node-icon">
-            <Icon />
+            <Icon size={11} />
           </span>
         )}
         <span className="tree-menu__node-title">{title}</span>
+        {argument && (
+          <span className="tree-menu__node-argument">
+            <span className="tree-menu__node-argument-label">{argument}</span>
+          </span>
+        )}
         {typeAnnotation && (
           <span className="tree-menu__node-annotation">
             {`: ${typeAnnotation} :: ${kindAnnotation}`}
@@ -239,6 +245,7 @@ export function Tree({ nodes, onToggleNode = () => {} }) {
                 collapsedIcon,
                 typeAnnotation,
                 kindAnnotation,
+                argument,
                 icon,
                 expanded,
               },
@@ -250,6 +257,7 @@ export function Tree({ nodes, onToggleNode = () => {} }) {
                 title={nodeName}
                 typeAnnotation={typeAnnotation}
                 kindAnnotation={kindAnnotation}
+                argument={argument}
                 icon={
                   icon
                     ? icon

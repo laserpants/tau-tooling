@@ -67,9 +67,8 @@ ul.tree-menu__ul {
   /* line-height: 2.1em; */
 
   li.tree-menu__li {
-    /* font-family: monospace; */
-
-    font-size: 14px;
+    font-family: monospace; 
+    font-size: 13px;
     position: relative;
 
     &:before {
@@ -123,4 +122,16 @@ ul.tree-menu__ul {
 
 .tree-menu__node-icon {
   margin-right: 0.3em;
+}
+
+.tree-menu__node-argument-label {
+  background: #e6dec9f8;
+  height: 16px;
+  justify-content: center;
+  display: flex;
+  color: rgb(37, 30, 40);
+  padding: 0.6em 0.7em;
+  align-items: center;
+  font-size: 0.85em;
+  border-radius: 3px;
 }
