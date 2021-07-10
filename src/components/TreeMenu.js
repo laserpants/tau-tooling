@@ -1,5 +1,10 @@
 import React, { useState } from "react";
-import { FaCube, FaPlusSquare, FaMinusSquare } from "react-icons/fa";
+import {
+  FaPenFancy,
+  FaCube,
+  FaPlusSquare,
+  FaMinusSquare,
+} from "react-icons/fa";
 
 function getTypeInfo({ children, meta: [datatype, con], pretty }) {
   const kind = ({ meta: [, con], children }) => {
@@ -268,7 +273,6 @@ function getAttributes(datatype, con, children, args) {
         }
         case "ELet": {
           const [t, e1, e2, e3] = children;
-
           return {
             children: [builder(e1), builder(e2), builder(e3)],
             ...getTypeInfo(t),
@@ -338,6 +342,7 @@ export function builder(obj) {
   let attributes = {
     expandedIcon: FaMinusSquare,
     collapsedIcon: FaPlusSquare,
+    pretty: obj.pretty,
   };
 
   if (Array.isArray(obj)) {
@@ -394,33 +399,43 @@ export function TreeMenuItem({
   argument,
   children,
   onClick,
+  pretty,
   root = false,
 }) {
   return (
     <li className={`tree-menu__li ${root ? "root" : ""}`}>
-      <span
-        className="tree-menu__node no-select"
-        onClick={(e) => {
-          e.stopPropagation();
-          if ("function" === typeof onClick) onClick(e);
-        }}
-      >
-        {Icon && (
-          <span className="tree-menu__node-icon">
-            <Icon size={11} />
-          </span>
-        )}
-        <span className="tree-menu__node-title">{title}</span>
-        {argument && (
-          <span className="tree-menu__node-argument">
-            <span className="tree-menu__node-argument-label">{argument}</span>
-          </span>
-        )}
-        {typeAnnotation && (
-          <span className="tree-menu__node-annotation">
-            {`: ${typeAnnotation} :: ${kindAnnotation}`}
-          </span>
-        )}
+      <span className="tree-menu__node-container no-select">
+        <span
+          className="tree-menu__node"
+          onClick={(e) => {
+            e.stopPropagation();
+            if ("function" === typeof onClick) onClick(e);
+          }}
+        >
+          {Icon && (
+            <span className="tree-menu__node-icon">
+              <Icon size={11} />
+            </span>
+          )}
+          <span className="tree-menu__node-title">{title}</span>
+          {argument && (
+            <span className="tree-menu__node-argument">
+              <span className="tree-menu__node-argument-label">{argument}</span>
+            </span>
+          )}
+          {typeAnnotation && (
+            <span className="tree-menu__node-annotation">
+              {`: ${typeAnnotation} :: ${kindAnnotation}`}
+            </span>
+          )}
+        </span>
+        <span className="tree-menu__node-print">
+          <FaPenFancy
+            onClick={() => {
+              console.log(pretty);
+            }}
+          />
+        </span>
       </span>
       {children}
     </li>
@@ -499,6 +514,7 @@ export function Tree({ nodes, onToggleNode = () => {} }) {
                 icon,
                 expanded,
                 alwaysExpanded,
+                pretty,
               },
               i
             ) => {
@@ -510,6 +526,7 @@ export function Tree({ nodes, onToggleNode = () => {} }) {
                   typeAnnotation={typeAnnotation}
                   kindAnnotation={kindAnnotation}
                   argument={argument}
+                  pretty={pretty}
                   icon={
                     icon
                       ? icon

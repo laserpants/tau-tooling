@@ -113,12 +113,16 @@ ul.tree-menu__ul {
   }
 }
 
+.tree-menu__node-container {
+  cursor: pointer;
+  min-height: 20px;
+}
+
+.tree-menu__node-container,
 .tree-menu__node {
   display: flex; 
   flex-direction: row;
   align-items: center;
-  cursor: pointer;
-  min-height: 20px;
 }
 
 .tree-menu__node-icon {
@@ -140,4 +144,10 @@ ul.tree-menu__ul {
 .tree-menu__node-annotation {
   margin-left: 0.6em;
   font-size: 10px;
+}
+
+.tree-menu__node-print {
+  margin-left: 0.6em;
+  font-size: 10px;
+  color: #7a7a7a;
 }
