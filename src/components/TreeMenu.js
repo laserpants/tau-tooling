@@ -43,6 +43,58 @@ function getTypeInfo({ children, meta: [datatype, con], pretty }) {
 
 function getAttributes(datatype, con, children, args) {
   switch (datatype) {
+    case "Op1": {
+      const [t] = children;
+
+      return {
+        children: [],
+        ...getTypeInfo(t),
+      };
+    }
+    case "Op2": {
+      const [t] = children;
+
+      return {
+        children: [],
+        ...getTypeInfo(t),
+      };
+    }
+    case "Binding": {
+      switch (con) {
+        case "BPat": {
+          const [t, p] = children;
+
+          return {
+            children: [builder(p)],
+            ...getTypeInfo(t),
+          };
+        }
+        case "BFun": {
+          const [t, name, ps] = children;
+
+          return {
+            argument: name,
+            children: [builder(ps)],
+            ...getTypeInfo(t),
+          };
+        }
+        default:
+          break;
+      }
+      break;
+    }
+    case "SimplifiedClause":
+    case "Clause": {
+      const [t, p, gs] = children;
+
+      return {
+        children: [
+          builder(p),
+          ...(Array.isArray(gs) ? gs.map(builder) : [builder(gs)]),
+        ],
+        ...getTypeInfo(t),
+      };
+    }
     case "Prim": {
       switch (con) {
         case "TUnit": {
@@ -81,6 +133,15 @@ function getAttributes(datatype, con, children, args) {
             ...getTypeInfo(t),
           };
         }
+        case "PAs": {
+          const [t, name, p] = children;
+
+          return {
+            argument: name,
+            children: [builder(p)],
+            ...getTypeInfo(t),
+          };
+        }
         case "PLit": {
           const [t, prim] = children;
 
@@ -95,6 +156,39 @@ function getAttributes(datatype, con, children, args) {
           return {
             children: [],
             ...getTypeInfo(t),
+          };
+        }
+        case "POr": {
+          const [t, p1, p2] = children;
+
+          return {
+            children: [builder(p1), builder(p2)],
+            ...getTypeInfo(t),
+          };
+        }
+        case "PTuple":
+        case "PList": {
+          const [t, ps] = children;
+
+          return {
+            children: ps.map(builder),
+            ...getTypeInfo(t),
+          };
+        }
+        case "PRow": {
+          const [t, name, p1, p2] = children;
+
+          return {
+            argument: name,
+            children: [builder(p1), builder(p2)],
+            ...getTypeInfo(t),
+          };
+        }
+        case "PAnn": {
+          const [t, p1] = children;
+
+          return {
+            children: [builder(t), builder(p1)],
           };
         }
         default:
@@ -203,9 +297,8 @@ function getAttributes(datatype, con, children, args) {
             ...getTypeInfo(t),
           };
         }
-        case "ETuple": 
-        case "EList": 
-        {
+        case "ETuple":
+        case "EList": {
           const [t, es] = children;
 
           return {
