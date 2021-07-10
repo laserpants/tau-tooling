@@ -511,7 +511,7 @@ export function Tree({ nodes, onToggleNode = () => {} }) {
                   }
                   onClick={onToggleNode.bind(null, path)}
                 >
-                  <Subtree nodes={(expanded || alwaysExpanded) ? children : []} />
+                  <Subtree nodes={expanded || alwaysExpanded ? children : []} />
                 </TreeMenuItem>
               );
             }
