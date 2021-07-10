@@ -43,6 +43,65 @@ function getTypeInfo({ children, meta: [datatype, con], pretty }) {
 
 function getAttributes(datatype, con, children, args) {
   switch (datatype) {
+    case "Prim": {
+      switch (con) {
+        case "TUnit": {
+          return {
+            argument: "()",
+            children: [],
+          };
+        }
+        default: {
+          const [name] = children;
+
+          return {
+            argument: `${name}`,
+            children: [],
+          };
+        }
+      }
+    }
+    case "Pattern": {
+      switch (con) {
+        case "PVar": {
+          const [t, name] = children;
+
+          return {
+            argument: name,
+            children: [],
+            ...getTypeInfo(t),
+          };
+        }
+        case "PCon": {
+          const [t, name, ps] = children;
+
+          return {
+            argument: name,
+            children: ps.map(builder),
+            ...getTypeInfo(t),
+          };
+        }
+        case "PLit": {
+          const [t, prim] = children;
+
+          return {
+            children: [builder(prim)],
+            ...getTypeInfo(t),
+          };
+        }
+        case "PAny": {
+          const [t] = children;
+
+          return {
+            children: [],
+            ...getTypeInfo(t),
+          };
+        }
+        default:
+          break;
+      }
+      break;
+    }
     case "Expr": {
       switch (con) {
         case "EVar": {
@@ -51,6 +110,31 @@ function getAttributes(datatype, con, children, args) {
           return {
             argument: name,
             children: [],
+            ...getTypeInfo(t),
+          };
+        }
+        case "ECon": {
+          const [t, name, es] = children;
+
+          return {
+            argument: name,
+            children: es.map(builder),
+            ...getTypeInfo(t),
+          };
+        }
+        case "ELit": {
+          const [t, prim] = children;
+
+          return {
+            children: [builder(prim)],
+            ...getTypeInfo(t),
+          };
+        }
+        case "EApp": {
+          const [t, es] = children;
+
+          return {
+            children: es.map(builder),
             ...getTypeInfo(t),
           };
         }
@@ -67,7 +151,23 @@ function getAttributes(datatype, con, children, args) {
           const [t, e1, e2] = children;
 
           return {
-            children: [builder(e1), builder(e2)],
+            children: [...e1.map(builder), builder(e2)],
+            ...getTypeInfo(t),
+          };
+        }
+        case "EIf": {
+          const [t, e1, e2, e3] = children;
+
+          return {
+            children: [builder(e1), builder(e2), builder(e3)],
+            ...getTypeInfo(t),
+          };
+        }
+        case "EPat": {
+          const [t, e1, cs] = children;
+
+          return {
+            children: [builder(e1), builder(cs)],
             ...getTypeInfo(t),
           };
         }
@@ -77,6 +177,56 @@ function getAttributes(datatype, con, children, args) {
           return {
             children: [builder(e1), builder(e2), builder(e3)],
             ...getTypeInfo(t),
+          };
+        }
+        case "EFun": {
+          const [t, cs] = children;
+
+          return {
+            children: [builder(cs)],
+            ...getTypeInfo(t),
+          };
+        }
+        case "EOp1": {
+          const [t, op, e1] = children;
+
+          return {
+            children: [builder(op), builder(e1)],
+            ...getTypeInfo(t),
+          };
+        }
+        case "EOp2": {
+          const [t, op, e1, e2] = children;
+
+          return {
+            children: [builder(op), builder(e1), builder(e2)],
+            ...getTypeInfo(t),
+          };
+        }
+        case "ETuple": 
+        case "EList": 
+        {
+          const [t, es] = children;
+
+          return {
+            children: es.map(builder),
+            ...getTypeInfo(t),
+          };
+        }
+        case "ERow": {
+          const [t, name, e1, e2] = children;
+
+          return {
+            argument: name,
+            children: [builder(e1), builder(e2)],
+            ...getTypeInfo(t),
+          };
+        }
+        case "EAnn": {
+          const [t, e1] = children;
+
+          return {
+            children: [builder(t), builder(e1)],
           };
         }
         default:
@@ -231,7 +381,6 @@ export function useMenu(nodes) {
 
 export function Tree({ nodes, onToggleNode = () => {} }) {
   const Subtree = ({ nodes, root = false }) => {
-    console.log(nodes);
     return (
       nodes && (
         <TreeMenu>
