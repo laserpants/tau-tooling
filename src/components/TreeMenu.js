@@ -1,4 +1,37 @@
 import React, { useState } from "react";
+import { FaPlusSquare, FaMinusSquare } from "react-icons/fa";
+
+export function builder(obj) {
+  const attributes = {
+    expandedIcon: FaMinusSquare,
+    collapsedIcon: FaPlusSquare,
+  };
+
+  if (Array.isArray(obj)) {
+    return {
+      ...attributes,
+      nodeName: "[...]",
+      children: obj.map(builder),
+    };
+  }
+
+  if (!obj.meta) {
+    return {
+      ...attributes,
+      nodeName: obj,
+      children: [],
+    };
+  }
+
+  const [datatype, con] = obj.meta;
+
+  return {
+    ...attributes,
+    nodeName: con,
+    datatype,
+    children: Array.isArray(obj.children) ? obj.children.map(builder) : [],
+  };
+}
 
 export function TreeMenuContainer({ children }) {
   return <div className="tree-menu__container">{children}</div>;
