@@ -50,6 +50,7 @@ function ExprPipeline({ bundle }) {
         <TabPanel>
           <ExprTree tree={bundle.source} />
         </TabPanel>
+        {/*
         <TabPanel>TODO</TabPanel>
         <TabPanel>
           <ExprTree tree={bundle.stage1} />
@@ -69,6 +70,7 @@ function ExprPipeline({ bundle }) {
         <TabPanel>
           <ExprTree tree={bundle.core} />
         </TabPanel>
+        */}
       </TabPanels>
     </Tabs>
   );

@@ -118,6 +118,7 @@ ul.tree-menu__ul {
   flex-direction: row;
   align-items: center;
   cursor: pointer;
+  min-height: 20px;
 }
 
 .tree-menu__node-icon {
@@ -130,8 +131,7 @@ ul.tree-menu__ul {
   height: 16px;
   justify-content: center;
   display: flex;
-  color: rgb(37, 30, 40);
-  padding: 0.6em 0.7em;
+  padding: 0.6em;
   align-items: center;
   font-size: 0.85em;
   border-radius: 3px;

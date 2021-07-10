@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaPlusSquare, FaMinusSquare } from "react-icons/fa";
+import { FaCube, FaPlusSquare, FaMinusSquare } from "react-icons/fa";
 
 function getTypeInfo({ children, meta: [datatype, con], pretty }) {
   const kind = ({ meta: [, con], children }) => {
@@ -335,7 +335,7 @@ function getAttributes(datatype, con, children, args) {
 }
 
 export function builder(obj) {
-  const attributes = {
+  let attributes = {
     expandedIcon: FaMinusSquare,
     collapsedIcon: FaPlusSquare,
   };
@@ -362,12 +362,19 @@ export function builder(obj) {
     ...args
   } = obj;
 
+  const computed = getAttributes(datatype, con, children, args);
+
+  if (computed.alwaysExpanded) {
+    attributes.expandedIcon = FaCube;
+    attributes.collapsedIcon = FaCube;
+  }
+
   return {
     ...attributes,
     nodeName: con,
     datatype,
     children: Array.isArray(obj.children) ? obj.children.map(builder) : [],
-    ...getAttributes(datatype, con, children, args),
+    ...computed,
   };
 }
 
