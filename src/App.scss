@@ -125,6 +125,7 @@ ul.tree-menu__ul {
 }
 
 .tree-menu__node-argument-label {
+  margin-left: 0.6em;
   background: #cccccc;
   height: 16px;
   justify-content: center;
@@ -137,5 +138,6 @@ ul.tree-menu__ul {
 }
 
 .tree-menu__node-annotation {
-  font-size: 11px;
+  margin-left: 0.6em;
+  font-size: 10px;
 }

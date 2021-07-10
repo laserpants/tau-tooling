@@ -221,6 +221,7 @@ function getAttributes(datatype, con, children, args) {
 
           return {
             children: [builder(prim)],
+            alwaysExpanded: true,
             ...getTypeInfo(t),
           };
         }
@@ -490,27 +491,30 @@ export function Tree({ nodes, onToggleNode = () => {} }) {
                 argument,
                 icon,
                 expanded,
+                alwaysExpanded,
               },
               i
-            ) => (
-              <TreeMenuItem
-                key={i}
-                root={root}
-                title={nodeName}
-                typeAnnotation={typeAnnotation}
-                kindAnnotation={kindAnnotation}
-                argument={argument}
-                icon={
-                  icon
-                    ? icon
-                    : children?.length > 0 &&
-                      (expanded ? expandedIcon : collapsedIcon)
-                }
-                onClick={onToggleNode.bind(null, path)}
-              >
-                <Subtree nodes={expanded ? children : []} />
-              </TreeMenuItem>
-            )
+            ) => {
+              return (
+                <TreeMenuItem
+                  key={i}
+                  root={root}
+                  title={nodeName}
+                  typeAnnotation={typeAnnotation}
+                  kindAnnotation={kindAnnotation}
+                  argument={argument}
+                  icon={
+                    icon
+                      ? icon
+                      : children?.length > 0 &&
+                        (expanded ? expandedIcon : collapsedIcon)
+                  }
+                  onClick={onToggleNode.bind(null, path)}
+                >
+                  <Subtree nodes={(expanded || alwaysExpanded) ? children : []} />
+                </TreeMenuItem>
+              );
+            }
           )}
         </TreeMenu>
       )
