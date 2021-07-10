@@ -71,6 +71,14 @@ function getAttributes(datatype, con, children, args) {
             ...getTypeInfo(t),
           };
         }
+        case "ELet": {
+          const [t, e1, e2, e3] = children;
+
+          return {
+            children: [builder(e1), builder(e2), builder(e3)],
+            ...getTypeInfo(t),
+          };
+        }
         default:
           break;
       }
