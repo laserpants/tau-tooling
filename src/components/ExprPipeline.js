@@ -9,7 +9,7 @@ import {
   Stack,
   ButtonGroup,
   IconButton,
-//  Button,
+  //  Button,
 } from "@chakra-ui/react";
 import { BiCollapse, BiExpand } from "react-icons/bi";
 import { Tree } from "./TreeMenu";
@@ -71,6 +71,7 @@ function ExprPipeline({ bundle }) {
       <TabList>
         <Tab>Source tree</Tab>
         <Tab>Typed tree</Tab>
+        <Tab>Normal?</Tab>
         <Tab>S1</Tab>
         <Tab>S2</Tab>
         <Tab>S3</Tab>
@@ -85,7 +86,16 @@ function ExprPipeline({ bundle }) {
             <ExprTree tree={bundle.source} />
           </TreeContextProvider>
         </TabPanel>
-        <TabPanel>TODO</TabPanel>
+        <TabPanel>
+          <TreeContextProvider>
+            <ExprTree tree={bundle.typed} />
+          </TreeContextProvider>
+        </TabPanel>
+        <TabPanel>
+          <TreeContextProvider>
+            <ExprTree tree={bundle.normal} />
+          </TreeContextProvider>
+        </TabPanel>
         <TabPanel>
           <TreeContextProvider>
             <ExprTree tree={bundle.stage1} />

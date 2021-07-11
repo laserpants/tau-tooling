@@ -1,10 +1,6 @@
 import React, { useContext } from "react";
-import { IoCube } from 'react-icons/io5';
-import {
-  FaPenFancy,
-  FaPlusSquare,
-  FaMinusSquare,
-} from "react-icons/fa";
+import { IoCube } from "react-icons/io5";
+import { FaPenFancy, FaPlusSquare, FaMinusSquare } from "react-icons/fa";
 import { TreeContext } from "../contexts/Tree";
 
 export function TreeMenuContainer({ children }) {
@@ -30,9 +26,9 @@ export function TreeMenuItem({
 }) {
   const printArray = (items) => {
     if (items?.length > 0) {
-      return `[${items.map(({ pretty }) => pretty).join(', ')}]`;
+      return `[${items.map(({ pretty }) => pretty).join(", ")}]`;
     }
-    return '';
+    return "";
   };
 
   return (
@@ -71,18 +67,18 @@ export function TreeMenuItem({
         )}
         {errors?.length > 0 && (
           <span>
-            <span className="tree-menu__node-errors">
-              {printArray(errors)}
-            </span>
+            <span className="tree-menu__node-errors">{printArray(errors)}</span>
           </span>
         )}
-        <span className="tree-menu__node-print">
-          <FaPenFancy
-            onClick={() => {
-              console.log(pretty);
-            }}
-          />
-        </span>
+        {pretty && (
+          <span className="tree-menu__node-print">
+            <FaPenFancy
+              onClick={() => {
+                console.log(pretty);
+              }}
+            />
+          </span>
+        )}
       </span>
       {children}
     </li>

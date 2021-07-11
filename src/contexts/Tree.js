@@ -14,7 +14,9 @@ export function TreeContextProvider({ children }) {
 
   const setAll = (val) => {
     let newMap = {};
-    Object.keys(map).forEach((key) => { newMap[key] = val });
+    Object.keys(map).forEach((key) => {
+      newMap[key] = val;
+    });
     setMap(newMap);
   };
 

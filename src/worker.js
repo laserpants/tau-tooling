@@ -171,7 +171,17 @@ function main() {
           children: [builder(es), builder(e)],
         };
       }
-      case "SimplifiedClause":
+      case "SimplifiedClause": {
+        const [t, ps, gs] = children;
+
+        return {
+          children: [
+            ...ps.map(builder),
+            ...(Array.isArray(gs) ? gs.map(builder) : [builder(gs)]),
+          ],
+          ...getTypeInfo(t),
+        };
+      }
       case "Clause": {
         const [t, p, gs] = children;
 
