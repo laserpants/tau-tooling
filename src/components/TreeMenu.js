@@ -28,6 +28,13 @@ export function TreeMenuItem({
   pretty,
   root = false,
 }) {
+  const printArray = (items) => {
+    if (items?.length > 0) {
+      return `[${items.map(({ pretty }) => pretty).join(', ')}]`;
+    }
+    return '';
+  };
+
   return (
     <li className={`tree-menu__li ${root ? "root" : ""}`}>
       <span className="tree-menu__node-container no-select">
@@ -55,12 +62,20 @@ export function TreeMenuItem({
             </span>
           )}
         </span>
-        <span>
-          {JSON.stringify(classPredicates && classPredicates.map(x => x.pretty))}
-        </span>
-        <span>
-          {JSON.stringify(errors)}
-        </span>
+        {classPredicates?.length > 0 && (
+          <span>
+            <span className="tree-menu__node-predicates">
+              {printArray(classPredicates)}
+            </span>
+          </span>
+        )}
+        {errors?.length > 0 && (
+          <span>
+            <span className="tree-menu__node-errors">
+              {printArray(errors)}
+            </span>
+          </span>
+        )}
         <span className="tree-menu__node-print">
           <FaPenFancy
             onClick={() => {
