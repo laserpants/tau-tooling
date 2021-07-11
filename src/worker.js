@@ -327,7 +327,7 @@ function main() {
             const [t, e1, cs] = children;
 
             return {
-              children: [builder(e1), builder(cs)],
+              children: [builder(e1), ...cs.map(builder)],
               ...getTypeInfo(t),
             };
           }
@@ -342,7 +342,7 @@ function main() {
             const [t, cs] = children;
 
             return {
-              children: [builder(cs)],
+              children: cs.map(builder),
               ...getTypeInfo(t),
             };
           }
