@@ -9,7 +9,7 @@ import {
   Stack,
   ButtonGroup,
   IconButton,
-  Button,
+//  Button,
 } from "@chakra-ui/react";
 import { BiCollapse, BiExpand } from "react-icons/bi";
 import { Tree } from "./TreeMenu";
@@ -52,7 +52,9 @@ function ExprPipeline({ bundle }) {
           <>
             <Stack direction="row" mb={2}>
               <ButtonGroup variant="outline" size="xs" spacing="1">
+                {/*
                 <Button borderRadius={0}>New</Button>
+                */}
                 <IconButton onClick={collapseAll} icon={<BiCollapse />} />
                 <IconButton onClick={expandAll} icon={<BiExpand />} />
               </ButtonGroup>

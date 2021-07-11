@@ -41,6 +41,14 @@ function main() {
 
   const getAttributes = (datatype, con, children, args) => {
     switch (datatype) {
+      case "SimplifiedPattern": {
+        const [t, p, ps] = children;
+
+        return {
+          children: [builder(p), ...ps.map(builder)],
+          ...getTypeInfo(t),
+        };
+      }
       case "Core": {
         switch (con) {
           case "CVar": {
