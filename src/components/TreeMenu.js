@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
+import { IoCube } from 'react-icons/io5';
 import {
   FaPenFancy,
-  FaCube,
   FaPlusSquare,
   FaMinusSquare,
 } from "react-icons/fa";
@@ -78,7 +78,7 @@ function getIcon(icon) {
       return FaMinusSquare;
     case "ICON_OPEN":
     default:
-      return FaCube;
+      return IoCube;
   }
 }
 
