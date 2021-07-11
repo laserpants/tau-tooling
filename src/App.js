@@ -13,10 +13,10 @@ import {
   Tbody,
   ChakraProvider,
 } from "@chakra-ui/react";
-import { AiFillFolder, AiFillTag } from "react-icons/ai";
+import { AiFillTag } from "react-icons/ai";
 import { Global, css } from "@emotion/react";
 import { IoIosArrowDroprightCircle } from "react-icons/io";
-import { TreeMenuContainer, Tree, useMenu } from "./components/TreeMenu";
+import { TreeMenuContainer } from "./components/TreeMenu";
 import bundle from "./tmp/bundle";
 
 function ModulePane() {
@@ -101,38 +101,40 @@ function ModulePane() {
 }
 
 function ModulesList() {
-  const testTree = [
-    {
-      nodeName: "Main",
-      children: [],
-    },
-    {
-      nodeName: "List",
-      children: [],
-    },
-    {
-      nodeName: "List",
-      expandedIcon: AiFillFolder,
-      collapsedIcon: AiFillFolder,
-      expanded: true,
-      children: [
-        {
-          nodeName: "List.Extra",
-          children: [],
-        },
-        {
-          nodeName: "List.NonEmpty",
-          children: [],
-        },
-      ],
-    },
-  ];
+  //const testTree = [
+  //  {
+  //    nodeName: "Main",
+  //    children: [],
+  //  },
+  //  {
+  //    nodeName: "List",
+  //    children: [],
+  //  },
+  //  {
+  //    nodeName: "List",
+  //    expandedIcon: AiFillFolder,
+  //    collapsedIcon: AiFillFolder,
+  //    expanded: true,
+  //    children: [
+  //      {
+  //        nodeName: "List.Extra",
+  //        children: [],
+  //      },
+  //      {
+  //        nodeName: "List.NonEmpty",
+  //        children: [],
+  //      },
+  //    ],
+  //  },
+  //];
 
-  const { treeNodes, handleNodeToggled } = useMenu(testTree);
+  //const { treeNodes, handleNodeToggled } = useMenu(testTree);
 
   return (
     <TreeMenuContainer>
+      {/*
       <Tree nodes={treeNodes} onToggleNode={handleNodeToggled} />
+      */}
     </TreeMenuContainer>
   );
 }

@@ -41,6 +41,73 @@ function main() {
 
   const getAttributes = (datatype, con, children, args) => {
     switch (datatype) {
+      case "Core": {
+        switch (con) {
+          case "CVar": {
+            const [name] = children;
+
+            return {
+              argument: `${name}`,
+              children: [],
+            };
+          }
+          case "CLit": {
+            const [prim] = children;
+
+            return {
+              children: [builder(prim)],
+            };
+          }
+          case "CApp": {
+            const [cs] = children;
+
+            return {
+              children: cs.map(builder),
+            };
+          }
+          case "CLet": {
+            const [name, c1, c2] = children;
+
+            return {
+              argument: `${name}`,
+              children: [builder(c1), builder(c2)],
+            };
+          }
+          case "CLam": {
+            const [name, c1] = children;
+
+            return {
+              argument: `${name}`,
+              children: [builder(c1)],
+            };
+          }
+          case "CIf": {
+            const [c1, c2, c3] = children;
+
+            return {
+              children: [builder(c1), builder(c2), builder(c3)],
+            };
+          }
+          case "CPat": {
+            const [c, cs] = children;
+
+            return {
+              children: [builder(c), builder(cs)],
+            };
+          }
+          default:
+            break;
+        }
+        break;
+      }
+      case "Name": {
+        const [name] = children;
+
+        return {
+          argument: `${name}`,
+          children: [],
+        };
+      }
       case "Op1": {
         const [t] = children;
 
@@ -331,7 +398,7 @@ function main() {
     return {};
   };
 
-  const builder = (obj) => {
+  const builder = (obj, i) => {
     const attributes = {
       expandedIcon: "ICON_MINUS",
       collapsedIcon: "ICON_PLUS",
@@ -377,12 +444,31 @@ function main() {
     };
   };
 
-  onmessage = (e) => {
+  onmessage = ({ data }) => {
     postMessage({ type: "ON_BEGIN" });
-    const tree = builder(e.data);
+    const tree = builder(data);
+
+    let map = {};
+    const insertPath =
+      (parentPath) =>
+      ({ children, ...node }, i) => {
+        const path = parentPath ? `${parentPath}.${i}` : `${i}`;
+        map[path] = false;
+        return {
+          ...node,
+          path,
+          children: children.map(insertPath(path)),
+        };
+      };
+
+    const pathTree = insertPath("")(tree, 0);
+
     postMessage({
       type: "ON_SUCCESS",
-      payload: tree,
+      payload: {
+        tree: pathTree,
+        map,
+      },
     });
   };
 }

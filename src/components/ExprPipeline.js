@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
   Tabs,
+  Spinner,
   TabList,
   TabPanels,
   TabPanel,
@@ -11,48 +12,54 @@ import {
   Button,
 } from "@chakra-ui/react";
 import { BiCollapse, BiExpand } from "react-icons/bi";
-import { Tree, useMenu, builder } from "./TreeMenu";
+import { Tree } from "./TreeMenu";
 import treeWorker from "../worker.js";
+import { TreeContextProvider } from "../contexts/Tree";
+import { TreeContext } from "../contexts/Tree";
 
 function ExprPipeline({ bundle }) {
   const ExprTree = ({ tree }) => {
-    const [myTree, setMyTree] = useState();
+    const [compiledTree, setCompiledTree] = useState();
+    const [working, setWorking] = useState(false);
+    const { initialize, expandAll, collapseAll } = useContext(TreeContext);
 
     useEffect(() => {
       const worker = new Worker(treeWorker);
 
       worker.onmessage = ({ data }) => {
         switch (data.type) {
+          case "ON_BEGIN":
+            setWorking(true);
+            break;
           case "ON_SUCCESS":
-            setMyTree(data.payload);
+            const { tree, map } = data.payload;
+            setCompiledTree(tree);
+            initialize(map);
+            setWorking(false);
+            break;
           default:
             break;
         }
       };
-      worker.postMessage([tree]);
-    }, [tree, setMyTree]);
-
-    //const { treeNodes, handleNodeToggled, collapseAll, expandAll } = useMenu([
-    //  builder(tree),
-    //]);
+      worker.postMessage(tree);
+    }, [tree, setCompiledTree, initialize]);
 
     return (
       <>
-        {/*
-        <Stack direction="row" mb={2}>
-          <ButtonGroup variant="outline" size="xs" spacing="1">
-            <Button borderRadius={0}>New</Button>
-            <IconButton onClick={collapseAll} icon={<BiCollapse />} />
-            <IconButton onClick={expandAll} icon={<BiExpand />} />
-          </ButtonGroup>
-        </Stack>
-        */}
-        {myTree && <Tree nodes={[myTree]} />}
-        {/*
-        <pre>
-          {JSON.stringify(myTree, null, 2)}
-        </pre>
-        */}
+        {working ? (
+          <Spinner />
+        ) : (
+          <>
+            <Stack direction="row" mb={2}>
+              <ButtonGroup variant="outline" size="xs" spacing="1">
+                <Button borderRadius={0}>New</Button>
+                <IconButton onClick={collapseAll} icon={<BiCollapse />} />
+                <IconButton onClick={expandAll} icon={<BiExpand />} />
+              </ButtonGroup>
+            </Stack>
+            {compiledTree && <Tree nodes={[compiledTree]} />}
+          </>
+        )}
       </>
     );
   };
@@ -72,29 +79,41 @@ function ExprPipeline({ bundle }) {
       </TabList>
       <TabPanels h="100%" overflow="auto" className="tree-menu__container">
         <TabPanel>
-          <ExprTree tree={bundle.source} />
+          <TreeContextProvider>
+            <ExprTree tree={bundle.source} />
+          </TreeContextProvider>
         </TabPanel>
-        {/*
         <TabPanel>TODO</TabPanel>
         <TabPanel>
-          <ExprTree tree={bundle.stage1} />
+          <TreeContextProvider>
+            <ExprTree tree={bundle.stage1} />
+          </TreeContextProvider>
         </TabPanel>
         <TabPanel>
-          <ExprTree tree={bundle.stage2} />
+          <TreeContextProvider>
+            <ExprTree tree={bundle.stage2} />
+          </TreeContextProvider>
         </TabPanel>
         <TabPanel>
-          <ExprTree tree={bundle.stage3} />
+          <TreeContextProvider>
+            <ExprTree tree={bundle.stage3} />
+          </TreeContextProvider>
         </TabPanel>
         <TabPanel>
-          <ExprTree tree={bundle.stage4} />
+          <TreeContextProvider>
+            <ExprTree tree={bundle.stage4} />
+          </TreeContextProvider>
         </TabPanel>
         <TabPanel>
-          <ExprTree tree={bundle.stage5} />
+          <TreeContextProvider>
+            <ExprTree tree={bundle.stage5} />
+          </TreeContextProvider>
         </TabPanel>
         <TabPanel>
-          <ExprTree tree={bundle.core} />
+          <TreeContextProvider>
+            <ExprTree tree={bundle.core} />
+          </TreeContextProvider>
         </TabPanel>
-        */}
       </TabPanels>
     </Tabs>
   );
