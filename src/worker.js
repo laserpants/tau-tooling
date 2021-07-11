@@ -468,6 +468,7 @@ function main() {
             ...attributes,
             expandedIcon: "ICON_OPEN",
             collapsedIcon: "ICON_OPEN",
+            iconSize: 12,
           }
         : attributes),
       nodeName: con,

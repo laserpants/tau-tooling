@@ -14,6 +14,7 @@ export function TreeMenu({ children }) {
 export function TreeMenuItem({
   title,
   icon: Icon,
+  iconSize = 11,
   typeAnnotation,
   kindAnnotation,
   classPredicates,
@@ -43,7 +44,7 @@ export function TreeMenuItem({
         >
           {Icon && (
             <span className="tree-menu__node-icon">
-              <Icon size={11} />
+              <Icon size={iconSize} />
             </span>
           )}
           <span className="tree-menu__node-title">{title}</span>
@@ -122,6 +123,7 @@ export function Tree({ nodes }) {
                 errors,
                 argument,
                 icon,
+                iconSize,
                 alwaysExpanded,
                 pretty,
               },
@@ -146,6 +148,7 @@ export function Tree({ nodes }) {
                       : children?.length > 0 &&
                           (expanded ? expandedIcon : collapsedIcon)
                   )}
+                  iconSize={iconSize}
                   onClick={() => toggle(path)}
                 >
                   <Subtree nodes={expanded || alwaysExpanded ? children : []} />
