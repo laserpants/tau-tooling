@@ -41,6 +41,14 @@ function main() {
 
   const getAttributes = (datatype, con, children, args) => {
     switch (datatype) {
+      case "PredicateT": {
+        const [name, a] = children;
+
+        return {
+          argument: `${name}`,
+          children: [builder(a)],
+        };
+      }
       case "SimplifiedPattern": {
         const [t, p, ps] = children;
 
@@ -147,7 +155,7 @@ function main() {
 
             return {
               argument: name,
-              children: [builder(ps)],
+              children: ps.map(builder),
               ...getTypeInfo(t),
             };
           }

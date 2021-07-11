@@ -20,6 +20,8 @@ export function TreeMenuItem({
   icon: Icon,
   typeAnnotation,
   kindAnnotation,
+  classPredicates,
+  errors,
   argument,
   children,
   onClick,
@@ -52,6 +54,12 @@ export function TreeMenuItem({
               {`: ${typeAnnotation} :: ${kindAnnotation}`}
             </span>
           )}
+        </span>
+        <span>
+          {JSON.stringify(classPredicates && classPredicates.map(x => x.pretty))}
+        </span>
+        <span>
+          {JSON.stringify(errors)}
         </span>
         <span className="tree-menu__node-print">
           <FaPenFancy
@@ -99,6 +107,8 @@ export function Tree({ nodes }) {
                 collapsedIcon,
                 typeAnnotation,
                 kindAnnotation,
+                classPredicates,
+                errors,
                 argument,
                 icon,
                 alwaysExpanded,
@@ -115,6 +125,8 @@ export function Tree({ nodes }) {
                   title={nodeName}
                   typeAnnotation={typeAnnotation}
                   kindAnnotation={kindAnnotation}
+                  classPredicates={classPredicates}
+                  errors={errors}
                   argument={argument}
                   pretty={pretty}
                   icon={getIcon(
