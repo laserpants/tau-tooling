@@ -164,6 +164,13 @@ function main() {
         }
         break;
       }
+      case "Guard": {
+        const [es, e] = children;
+
+        return {
+          children: [builder(es), builder(e)],
+        };
+      }
       case "SimplifiedClause":
       case "Clause": {
         const [t, p, gs] = children;
@@ -424,7 +431,7 @@ function main() {
     if (Array.isArray(obj)) {
       return {
         ...attributes,
-        nodeName: "[...]",
+        nodeName: obj.length > 0 ? "[...]" : "[]",
         children: obj.map(builder),
       };
     }
