@@ -168,7 +168,7 @@ function main() {
         const [es, e] = children;
 
         return {
-          children: [builder(es), builder(e)],
+          children: [...es.map(builder), builder(e)],
         };
       }
       case "SimplifiedClause": {

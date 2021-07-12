@@ -78,9 +78,7 @@ function ExprPipeline({ bundle }) {
         <Tab>S4</Tab>
         <Tab>S5</Tab>
         <Tab>Core</Tab>
-        {bundle.value && (
-          <Tab>Evaluated</Tab>
-        )}
+        {bundle.value && <Tab>Evaluated</Tab>}
       </TabList>
       <TabPanels h="100%" overflow="auto" className="tree-menu__container">
         <TabPanel>
