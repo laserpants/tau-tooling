@@ -126,6 +126,13 @@ function ExprPipeline({ bundle }) {
             <ExprTree tree={bundle.core} />
           </TreeContextProvider>
         </TabPanel>
+        {bundle.value && (
+          <TabPanel>
+            <TreeContextProvider>
+              <ExprTree tree={bundle.value} />
+            </TreeContextProvider>
+          </TabPanel>
+        )}
       </TabPanels>
     </Tabs>
   );
