@@ -417,7 +417,8 @@ function main() {
             const [t, e1] = children;
 
             return {
-              children: [builder(t), builder(e1)],
+              argument: t.pretty,
+              children: [builder(e1)],
             };
           }
           default:
