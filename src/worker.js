@@ -201,6 +201,22 @@ function main() {
               children: [],
             };
           }
+          case "TChar": {
+            const [name] = children;
+
+            return {
+              argument: `'${name}'`,
+              children: [],
+            };
+          }
+          case "TString": {
+            const [name] = children;
+
+            return {
+              argument: `"${name}"`,
+              children: [],
+            };
+          }
           default: {
             const [name] = children;
 
