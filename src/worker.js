@@ -305,6 +305,14 @@ function main() {
               ...getTypeInfo(t),
             };
           }
+          case "EHole": {
+            const [t] = children;
+
+            return {
+              children: [],
+              ...getTypeInfo(t),
+            };
+          }
           case "ECon": {
             const [t, name, es] = children;
 
