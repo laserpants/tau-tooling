@@ -458,6 +458,8 @@ function main() {
   };
 
   const builder = (obj, i) => {
+    //console.log(obj);
+
     const attributes = {
       expandedIcon: "ICON_MINUS",
       collapsedIcon: "ICON_PLUS",
