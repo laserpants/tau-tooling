@@ -183,11 +183,11 @@ function main() {
         };
       }
       case "Clause": {
-        const [t, p, gs] = children;
+        const [t, ps, gs] = children;
 
         return {
           children: [
-            builder(p),
+            ...ps.map(builder),
             ...(Array.isArray(gs) ? gs.map(builder) : [builder(gs)]),
           ],
           ...getTypeInfo(t),
