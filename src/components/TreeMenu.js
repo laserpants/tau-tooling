@@ -22,12 +22,12 @@ export function TreeMenuItem({
   argument,
   children,
   onClick,
-  pretty,
+  toStr,
   root = false,
 }) {
   const printArray = (items) => {
     if (items?.length > 0) {
-      return `[${items.map(({ pretty }) => pretty).join(", ")}]`;
+      return `[${items.map(({ toStr }) => toStr).join(", ")}]`;
     }
     return "";
   };
@@ -71,11 +71,11 @@ export function TreeMenuItem({
             <span className="tree-menu__node-errors">{printArray(errors)}</span>
           </span>
         )}
-        {pretty && (
+        {toStr && (
           <span className="tree-menu__node-print">
             <FaPenFancy
               onClick={() => {
-                console.log(pretty);
+                console.log(toStr);
               }}
             />
           </span>
@@ -125,7 +125,7 @@ export function Tree({ nodes }) {
                 icon,
                 iconSize,
                 alwaysExpanded,
-                pretty,
+                toStr,
               },
               i
             ) => {
@@ -141,7 +141,7 @@ export function Tree({ nodes }) {
                   classPredicates={classPredicates}
                   errors={errors}
                   argument={argument}
-                  pretty={pretty}
+                  toStr={toStr}
                   icon={getIcon(
                     icon
                       ? icon

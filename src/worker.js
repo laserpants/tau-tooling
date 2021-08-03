@@ -5,7 +5,7 @@ function main() {
       case "TCon":
       case "TApp":
         const [k] = children;
-        return k.pretty;
+        return k.toStr;
       case "TRow":
         return "Row";
       default:
@@ -13,13 +13,13 @@ function main() {
     }
   };
 
-  const getTypeInfo = ({ children, meta: [datatype, con], pretty }) => {
+  const getTypeInfo = ({ children, meta: [datatype, con], toStr }) => {
     switch (datatype) {
       case "TypeInfoT": {
         const [errors, ty, predicates] = children;
 
         return {
-          typeAnnotation: ty.pretty,
+          typeAnnotation: ty.toStr,
           kindAnnotation: kind(ty),
           classPredicates: predicates.map(builder),
           errors: errors.map(builder),
@@ -27,7 +27,7 @@ function main() {
       }
       case "Type": {
         return {
-          typeAnnotation: pretty,
+          typeAnnotation: toStr,
           kindAnnotation: kind({ meta: [datatype, con], children }),
           classPredicates: [],
           errors: [],
@@ -305,7 +305,7 @@ function main() {
             const [t, p1] = children;
 
             return {
-              argument: t.pretty,
+              argument: t.toStr,
               children: [builder(p1)],
             };
           }
@@ -445,7 +445,7 @@ function main() {
             const [t, e1] = children;
 
             return {
-              argument: t.pretty,
+              argument: t.toStr,
               children: [builder(e1)],
             };
           }
@@ -464,7 +464,7 @@ function main() {
     const attributes = {
       expandedIcon: "ICON_MINUS",
       collapsedIcon: "ICON_PLUS",
-      pretty: obj.pretty,
+      toStr: obj.toStr,
     };
 
     if (Array.isArray(obj)) {
