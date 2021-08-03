@@ -21,8 +21,8 @@ function main() {
         return {
           typeAnnotation: ty.pretty,
           kindAnnotation: kind(ty),
-          classPredicates: predicates.children.map(builder),
-          errors: errors.children.map(builder),
+          classPredicates: predicates.map(builder),
+          errors: errors.map(builder),
         };
       }
       case "Type": {
@@ -164,11 +164,14 @@ function main() {
         }
         break;
       }
-      case "Guard": {
+      case "Choice": {
         const [es, e] = children;
 
         return {
-          children: [...es.map(builder), builder(e)],
+          children: [
+            ...(Array.isArray(es) ? es.map(builder) : [builder(es)]),
+            builder(e)
+          ],
         };
       }
       case "SimplifiedClause": {
@@ -458,8 +461,6 @@ function main() {
   };
 
   const builder = (obj, i) => {
-    //console.log(obj);
-
     const attributes = {
       expandedIcon: "ICON_MINUS",
       collapsedIcon: "ICON_PLUS",
