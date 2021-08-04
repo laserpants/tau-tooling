@@ -168,20 +168,14 @@ function main() {
         const [es, e] = children;
 
         return {
-          children: [
-            ...(Array.isArray(es) ? es.map(builder) : [builder(es)]),
-            builder(e)
-          ],
+          children: [...arrayOrOne(es), builder(e)],
         };
       }
       case "SimplifiedClause": {
         const [t, ps, gs] = children;
 
         return {
-          children: [
-            ...ps.map(builder),
-            ...(Array.isArray(gs) ? gs.map(builder) : [builder(gs)]),
-          ],
+          children: [...arrayOrOne(ps), ...arrayOrOne(gs)],
           ...getTypeInfo(t),
         };
       }
@@ -189,10 +183,7 @@ function main() {
         const [t, ps, gs] = children;
 
         return {
-          children: [
-            ...ps.map(builder),
-            ...(Array.isArray(gs) ? gs.map(builder) : [builder(gs)]),
-          ],
+          children: [...arrayOrOne(ps), ...arrayOrOne(gs)],
           ...getTypeInfo(t),
         };
       }
@@ -459,6 +450,9 @@ function main() {
     }
     return {};
   };
+
+  const arrayOrOne = (elems) =>
+    Array.isArray(elems) ? elems.map(builder) : [builder(elems)];
 
   const builder = (obj, i) => {
     const attributes = {

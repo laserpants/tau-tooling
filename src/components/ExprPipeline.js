@@ -100,7 +100,7 @@ function ExprPipeline({ bundle }) {
             <ExprTree tree={bundle.typed} />
           </TreeContextProvider>
         </TabPanel>
-    {/*
+        {/*
         <TabPanel>
           <TreeContextProvider>
             <ExprTree tree={bundle.typed} />
