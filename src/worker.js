@@ -292,6 +292,14 @@ function main() {
               ...getTypeInfo(t),
             };
           }
+          case "PRecord": {
+            const [t, p] = children;
+
+            return {
+              children: [builder(p)],
+              ...getTypeInfo(t),
+            };
+          }
           case "PAnn": {
             const [t, p1] = children;
 
@@ -429,6 +437,14 @@ function main() {
             return {
               argument: name,
               children: [builder(e1), builder(e2)],
+              ...getTypeInfo(t),
+            };
+          }
+          case "ERecord": {
+            const [t, e] = children;
+
+            return {
+              children: [builder(e)],
               ...getTypeInfo(t),
             };
           }
