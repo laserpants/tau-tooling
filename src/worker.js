@@ -171,7 +171,7 @@ function main() {
           children: [...arrayOrOne(es), builder(e)],
         };
       }
-      case "SimplifiedClause": {
+      case "MonoClause": {
         const [t, ps, gs] = children;
 
         return {
