@@ -71,6 +71,7 @@ function ExprPipeline({ bundle }) {
       <TabList>
         <Tab>Source tree</Tab>
         <Tab>Typed tree</Tab>
+        <Tab>Normal tree</Tab>
         <Tab>S1</Tab>
         <Tab>S2</Tab>
         <Tab>S3</Tab>
@@ -104,6 +105,11 @@ function ExprPipeline({ bundle }) {
         <TabPanel>
           <TreeContextProvider>
             <ExprTree tree={bundle.typed} />
+          </TreeContextProvider>
+        </TabPanel>
+        <TabPanel>
+          <TreeContextProvider>
+            <ExprTree tree={bundle.normal} />
           </TreeContextProvider>
         </TabPanel>
         <TabPanel>
