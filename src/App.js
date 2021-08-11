@@ -7,9 +7,12 @@ import SplitPane from "react-split-pane";
 import {
   Accordion,
   Box,
+  Button,
   Table,
+  VStack,
   Tr,
   Td,
+  Textarea,
   Tbody,
   ChakraProvider,
 } from "@chakra-ui/react";
@@ -153,12 +156,34 @@ function Layout() { // eslint-disable-line no-unused-vars
               <ModulePane />
             </Pane>
             <Pane title="Main.factorial">
-              <ExprPipeline />
+              <ExprPipeline bundle={bundle} />
             </Pane>
           </SplitPane>
         </SplitPane>
         <Pane>xx</Pane>
       </SplitPane>
+    </SplitPane>
+  );
+}
+
+function Layout2() {
+  return (
+    <SplitPane split="horizontal">
+      <SplitPane split="vertical" defaultSize={600}>
+        <Pane>
+          <VStack>
+            <Textarea>
+            </Textarea>
+            <Button>
+              asfdadsf
+            </Button>
+          </VStack>
+        </Pane>
+        <Pane>
+          <ExprPipeline bundle={bundle} />
+        </Pane>
+      </SplitPane>
+      <ExprPipeline bundle={bundle} />
     </SplitPane>
   );
 }
@@ -178,11 +203,8 @@ function App() {
   return (
     <ChakraProvider>
       <Global styles={GlobalStyles} />
-      <Box w="100%">
-        {/*
-        <Layout />
-        */}
-        <ExprPipeline bundle={bundle} />
+      <Box w="100%" h="100vh">
+        <Layout2 />
       </Box>
     </ChakraProvider>
   );
