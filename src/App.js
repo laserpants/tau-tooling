@@ -17,7 +17,7 @@ import {
   Tbody,
   ChakraProvider,
 } from "@chakra-ui/react";
-import bundle from "./tmp/bundle";
+//import bundle from "./tmp/bundle";
 import { AiFillTag } from "react-icons/ai";
 import { AppContext, AppContextProvider } from "./contexts/App";
 import { Global, css } from "@emotion/react";
@@ -158,7 +158,9 @@ function Layout() { // eslint-disable-line no-unused-vars
               <ModulePane />
             </Pane>
             <Pane title="Main.factorial">
+              {/*
               <ExprPipeline bundle={bundle} />
+              */}
             </Pane>
           </SplitPane>
         </SplitPane>
@@ -170,24 +172,22 @@ function Layout() { // eslint-disable-line no-unused-vars
 
 function Layout2() {
   const [source, setSource] = useState("");
-  //const { setBundle } = useContext(AppContext);
-  const [bundle, setBundle] = useState();
+  const { setBundle } = useContext(AppContext);
+  //const [bundle, setBundle] = useState();
 
   const handleClick = async () => {
     const res = await axios.post("/run", { source });
     try {
       const bundle = JSON.parse(res.data.bundle);
       setBundle(bundle);
+      console.log(bundle);
     } catch (e) {
       console.error(e);
     }
   };
 
   return (
-    <SplitPane split="horizontal" defaultSize={300}>
-      <SplitPane split="vertical" defaultSize={600}>
-        <Pane>
-          <VStack>
+    <>
             <Textarea
               fontFamily="monospace"
               onChange={(e) => {
@@ -196,22 +196,41 @@ function Layout2() {
               value={source}
             />
             <Button onClick={handleClick}>asfdadsf</Button>
-          </VStack>
-        </Pane>
-        <Pane>
-          {/*
-          {bundle && (
-            <ExprPipeline bundle={bundle} />
-          )}
-          */}
-        </Pane>
-      </SplitPane>
-      <div>{bundle && <ExprPipeline bundle={bundle} />}</div>
-      {/*
-      <ExprPipeline bundle={bundle} />
-      */}
-    </SplitPane>
+
+      <div><ExprPipeline /></div>
+    </>
   );
+//    <SplitPane split="horizontal" defaultSize={300}>
+//      <SplitPane split="vertical" defaultSize={600}>
+//        <Pane>
+//          <VStack>
+//            <Textarea
+//              fontFamily="monospace"
+//              onChange={(e) => {
+//                setSource(e.target.value);
+//              }}
+//              value={source}
+//            />
+//            <Button onClick={handleClick}>asfdadsf</Button>
+//          </VStack>
+//        </Pane>
+//        <Pane>
+//          {/*
+//          {bundle && (
+//            <ExprPipeline bundle={bundle} />
+//          )}
+//          */}
+//        </Pane>
+//      </SplitPane>
+//      {/*
+//      <div>{bundle && <ExprPipeline bundle={bundle} />}</div>
+//      */}
+//      <div><ExprPipeline /></div>
+//      {/*
+//      <ExprPipeline bundle={bundle} />
+//      */}
+//    </SplitPane>
+//  );
 }
 
 const GlobalStyles = css`
