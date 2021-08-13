@@ -172,7 +172,7 @@ function Layout2() {
       <SplitPane split="vertical" defaultSize={600}>
         <Pane>
           <VStack>
-            <Textarea>
+            <Textarea fontFamily="monospace">
             </Textarea>
             <Button>
               asfdadsf
