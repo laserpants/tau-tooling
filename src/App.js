@@ -1,5 +1,6 @@
 import "./App.scss";
-import React from "react";
+import React, { useState, useContext } from "react";
+import axios from "./axios";
 import ExprPipeline from "./components/ExprPipeline";
 import Pane from "./components/Pane";
 import PaneSection from "./components/PaneSection";
@@ -16,11 +17,12 @@ import {
   Tbody,
   ChakraProvider,
 } from "@chakra-ui/react";
+import bundle from "./tmp/bundle";
 import { AiFillTag } from "react-icons/ai";
+import { AppContext, AppContextProvider } from "./contexts/App";
 import { Global, css } from "@emotion/react";
 import { IoIosArrowDroprightCircle } from "react-icons/io";
 import { TreeMenuContainer } from "./components/TreeMenu";
-import bundle from "./tmp/bundle";
 
 function ModulePane() {
   const TableCell = ({ children }) => (
@@ -167,23 +169,47 @@ function Layout() { // eslint-disable-line no-unused-vars
 }
 
 function Layout2() {
+  const [source, setSource] = useState("");
+  //const { setBundle } = useContext(AppContext);
+  const [bundle, setBundle] = useState();
+
+  const handleClick = async () => {
+    const res = await axios.post("/run", { source });
+    try {
+      const bundle = JSON.parse(res.data.bundle);
+      setBundle(bundle);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   return (
-    <SplitPane split="horizontal">
+    <SplitPane split="horizontal" defaultSize={300}>
       <SplitPane split="vertical" defaultSize={600}>
         <Pane>
           <VStack>
-            <Textarea fontFamily="monospace">
-            </Textarea>
-            <Button>
-              asfdadsf
-            </Button>
+            <Textarea
+              fontFamily="monospace"
+              onChange={(e) => {
+                setSource(e.target.value);
+              }}
+              value={source}
+            />
+            <Button onClick={handleClick}>asfdadsf</Button>
           </VStack>
         </Pane>
         <Pane>
-          <ExprPipeline bundle={bundle} />
+          {/*
+          {bundle && (
+            <ExprPipeline bundle={bundle} />
+          )}
+          */}
         </Pane>
       </SplitPane>
+      <div>{bundle && <ExprPipeline bundle={bundle} />}</div>
+      {/*
       <ExprPipeline bundle={bundle} />
+      */}
     </SplitPane>
   );
 }
@@ -203,9 +229,11 @@ function App() {
   return (
     <ChakraProvider>
       <Global styles={GlobalStyles} />
-      <Box w="100%" h="100vh">
-        <Layout2 />
-      </Box>
+      <AppContextProvider>
+        <Box w="100%" h="100vh">
+          <Layout2 />
+        </Box>
+      </AppContextProvider>
     </ChakraProvider>
   );
 }
