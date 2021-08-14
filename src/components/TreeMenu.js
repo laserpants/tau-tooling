@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import { IoCube } from "react-icons/io5";
 import { FaPenFancy, FaPlusSquare, FaMinusSquare } from "react-icons/fa";
-//import { TreeContext } from "../contexts/Tree";
 
 export function TreeMenuContainer({ children }) {
   return <div className="tree-menu__container">{children}</div>;
@@ -103,8 +102,6 @@ function getIcon(icon) {
 }
 
 export function Tree({ nodes, map, toggle }) {
-  //const { map, toggle } = useContext(TreeContext);
-
   const Subtree = ({ nodes, root = false }) => {
     return (
       nodes && (
