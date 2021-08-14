@@ -49,7 +49,7 @@ function main() {
           children: [builder(a)],
         };
       }
-      case "SimplifiedPattern": {
+      case "PatternLight": {
         const [t, p, ps] = children;
 
         return {
