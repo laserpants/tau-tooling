@@ -14,7 +14,7 @@ app.use(cors());
 
 app.post("/run", (req, res) => {
   console.log(req.body);
-  exec(`${cmd} -- ${req.body.source}`, (error, stdout, stderr) => {
+  exec(`${cmd} '${req.body.source.replace(/\'/g, "'\\\''")}'`, (error, stdout, stderr) => {
     res.json({
       bundle: stdout,
     });
