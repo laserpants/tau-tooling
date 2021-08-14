@@ -137,7 +137,7 @@ function App() {
     setLogOutput(logOutput.concat(str + '\n'));
   };
 
-  const handleRun = async () => {
+  const handleInterpret = async () => {
     const res = await axios.post("/run", { source });
     try {
       const bundle = JSON.parse(res.data.bundle);
@@ -163,17 +163,26 @@ function App() {
       <Box w="100%" h="100vh">
         <ReflexContainer orientation="horizontal">
           <ReflexElement>
-            <div className="pane-content">
-              <Textarea
-                fontFamily="monospace"
-                minHeight={200}
-                onChange={(e) => {
-                  setSource(e.target.value);
-                }}
-                value={source}
-              />
-              <Button onClick={handleRun}>Run</Button>
-            </div>
+            <Box className="pane-content" h="100%">
+              <VStack h="100%" spacing="0">
+                <Box h="full" w="100%">
+                  <Textarea
+                    fontFamily="monospace"
+                    fontSize="10pt"
+                    borderRadius="none"
+                    w="100%"
+                    h="100%"
+                    onChange={(e) => {
+                      setSource(e.target.value);
+                    }}
+                    value={source}
+                  />
+                </Box>
+                <Box h="10" w="100%">
+                  <Button onClick={handleInterpret}>Interpret</Button>
+                </Box>
+              </VStack>
+            </Box>
           </ReflexElement>
           <ReflexSplitter style={{ height: '8px' }} />
           <ReflexElement>
@@ -234,7 +243,7 @@ function App() {
                   Clear log
                 </button>
               </div>
-              <pre>
+              <pre style={{ fontSize: '9pt' }}>
                 {logOutput}
               </pre>
             </div>
