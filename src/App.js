@@ -48,7 +48,7 @@ function ExprTree({ tree }) {
     });
   };
 
-  const setAllExpanded = (val) => {
+  const setAllExpanded = (map, val) => {
     let newMap = {};
     Object.keys(map).forEach((key) => {
       newMap[key] = val;
@@ -67,11 +67,7 @@ function ExprTree({ tree }) {
         case "ON_SUCCESS":
           const { tree, map } = data.payload;
           setCompiledTree(tree);
-          let expanded = {};
-          Object.keys(map).forEach((key) => {
-            expanded[key] = true;
-          });
-          setMap(expanded);
+          setAllExpanded(map, true);
           setWorking(false);
           break;
         default:
@@ -89,14 +85,14 @@ function ExprTree({ tree }) {
         <>
           <button
             onClick={() => {
-              setAllExpanded(true);
+              setAllExpanded(map, true);
             }}
           >
             expand all
           </button>
           <button
             onClick={() => {
-              setAllExpanded(false);
+              setAllExpanded(map, false);
             }}
           >
             collapse all
@@ -111,11 +107,7 @@ function ExprTree({ tree }) {
           </Stack>
           */}
           {compiledTree && (
-            <Tree 
-              nodes={[compiledTree]} 
-              map={map} 
-              toggle={toggle} 
-            />
+            <Tree nodes={[compiledTree]} map={map} toggle={toggle} />
           )}
         </>
       )}
@@ -123,8 +115,39 @@ function ExprTree({ tree }) {
   );
 }
 
-function App() {
+function Editor({ onInterpret }) {
   const [source, setSource] = useState("");
+
+  return (
+    <VStack h="100%" spacing="0">
+      <Box h="full" w="100%">
+        <Textarea
+          fontFamily="monospace"
+          fontSize="10pt"
+          borderRadius="none"
+          w="100%"
+          h="100%"
+          onChange={(e) => {
+            setSource(e.target.value);
+          }}
+          value={source}
+        />
+      </Box>
+      <Box h="10" w="100%">
+        <Button
+          onClick={() => {
+            onInterpret(source);
+          }}
+          size="sm"
+        >
+          Interpret
+        </Button>
+      </Box>
+    </VStack>
+  );
+}
+
+function App() {
   const [sourceTree, setSourceTree] = useState(null);
   const [typedTree, setTypedTree] = useState(null);
   const [normalTree, setNormalTree] = useState(null);
@@ -139,10 +162,10 @@ function App() {
   const [requestRunning, setRequestRunning] = useState(false);
 
   const log = (str) => {
-    setLogOutput(logOutput.concat(str + '\n'));
+    setLogOutput(logOutput.concat(str + "\n"));
   };
 
-  const handleInterpret = async () => {
+  const handleInterpret = async (source) => {
     setRequestRunning(true);
     const res = await axios.post("/run", { source });
     try {
@@ -172,94 +195,79 @@ function App() {
         <ReflexContainer orientation="horizontal">
           <ReflexElement>
             <Box className="pane-content" h="100%">
-              <VStack h="100%" spacing="0">
-                <Box h="full" w="100%">
-                  <Textarea
-                    fontFamily="monospace"
-                    fontSize="10pt"
-                    borderRadius="none"
-                    w="100%"
-                    h="100%"
-                    onChange={(e) => {
-                      setSource(e.target.value);
-                    }}
-                    value={source}
-                  />
-                </Box>
-                <Box h="10" w="100%">
-                  <Button onClick={handleInterpret} size="sm">Interpret</Button>
-                </Box>
-              </VStack>
+              <Editor onInterpret={handleInterpret} />
             </Box>
           </ReflexElement>
-          <ReflexSplitter style={{ height: '8px' }} />
+          <ReflexSplitter style={{ height: "8px" }} />
           <ReflexElement>
             <div className="pane-content">
               {requestRunning ? (
-                <div>
-                  wait...
-                </div>
+                <div>wait...</div>
               ) : (
-              <Tabs size="sm" width="100%" height="100%">
-                <TabList>
-                  <Tab>Source tree</Tab>
-                  <Tab>Typed tree</Tab>
-                  <Tab>Context</Tab>
-                  <Tab>Normal tree</Tab>
-                  <Tab>S1</Tab>
-                  <Tab>S2</Tab>
-                  <Tab>S3</Tab>
-                  <Tab>S4</Tab>
-                  <Tab>Core</Tab>
-                  <Tab>Evaluated</Tab>
-                </TabList>
-                <TabPanels h="100%" overflow="auto" className="tree-menu__container">
-                  <TabPanel>
-                    {sourceTree && <ExprTree tree={sourceTree} />}
-                  </TabPanel>
-                  <TabPanel>
-                    {typedTree && <ExprTree tree={typedTree} />}
-                  </TabPanel>
-                  <TabPanel>
-                    {context && <ExprTree tree={context} />}
-                  </TabPanel>
-                  <TabPanel>
-                    {normalTree && <ExprTree tree={normalTree} />}
-                  </TabPanel>
-                  <TabPanel>
-                    {stage1Tree && <ExprTree tree={stage1Tree} />}
-                  </TabPanel>
-                  <TabPanel>
-                    {stage2Tree && <ExprTree tree={stage2Tree} />}
-                  </TabPanel>
-                  <TabPanel>
-                    {stage3Tree && <ExprTree tree={stage3Tree} />}
-                  </TabPanel>
-                  <TabPanel>
-                    {stage4Tree && <ExprTree tree={stage4Tree} />}
-                  </TabPanel>
-                  <TabPanel>
-                    {coreExpr && <ExprTree tree={coreExpr} />}
-                  </TabPanel>
-                  <TabPanel>
-                    {value && <ExprTree tree={value} />}
-                  </TabPanel>
-                </TabPanels>
-              </Tabs>
+                <Tabs size="sm" width="100%" height="100%">
+                  <TabList>
+                    <Tab>Source tree</Tab>
+                    <Tab>Typed tree</Tab>
+                    <Tab>Context</Tab>
+                    <Tab>Normal tree</Tab>
+                    <Tab>S1</Tab>
+                    <Tab>S2</Tab>
+                    <Tab>S3</Tab>
+                    <Tab>S4</Tab>
+                    <Tab>Core</Tab>
+                    <Tab>Evaluated</Tab>
+                  </TabList>
+                  <TabPanels
+                    h="100%"
+                    overflow="auto"
+                    className="tree-menu__container"
+                  >
+                    <TabPanel>
+                      {sourceTree && <ExprTree tree={sourceTree} />}
+                    </TabPanel>
+                    <TabPanel>
+                      {typedTree && <ExprTree tree={typedTree} />}
+                    </TabPanel>
+                    <TabPanel>
+                      {context && <ExprTree tree={context} />}
+                    </TabPanel>
+                    <TabPanel>
+                      {normalTree && <ExprTree tree={normalTree} />}
+                    </TabPanel>
+                    <TabPanel>
+                      {stage1Tree && <ExprTree tree={stage1Tree} />}
+                    </TabPanel>
+                    <TabPanel>
+                      {stage2Tree && <ExprTree tree={stage2Tree} />}
+                    </TabPanel>
+                    <TabPanel>
+                      {stage3Tree && <ExprTree tree={stage3Tree} />}
+                    </TabPanel>
+                    <TabPanel>
+                      {stage4Tree && <ExprTree tree={stage4Tree} />}
+                    </TabPanel>
+                    <TabPanel>
+                      {coreExpr && <ExprTree tree={coreExpr} />}
+                    </TabPanel>
+                    <TabPanel>{value && <ExprTree tree={value} />}</TabPanel>
+                  </TabPanels>
+                </Tabs>
               )}
             </div>
           </ReflexElement>
-          <ReflexSplitter style={{ height: '8px' }} />
+          <ReflexSplitter style={{ height: "8px" }} />
           <ReflexElement>
             <div className="pane-content">
               <div>
-                <button onClick={() => { setLogOutput(''); }}>
+                <button
+                  onClick={() => {
+                    setLogOutput("");
+                  }}
+                >
                   Clear log
                 </button>
               </div>
-              <pre style={{ fontSize: '9pt' }}>
-                {logOutput}
-              </pre>
+              <pre style={{ fontSize: "9pt" }}>{logOutput}</pre>
             </div>
           </ReflexElement>
         </ReflexContainer>
