@@ -134,7 +134,7 @@ function App() {
   const [logOutput, setLogOutput] = useState("");
 
   const log = (str) => {
-    setLogOutput(logOutput.concat(str));
+    setLogOutput(logOutput.concat(str + '\n'));
   };
 
   const handleRun = async () => {
@@ -234,9 +234,9 @@ function App() {
                   Clear log
                 </button>
               </div>
-              <div>
+              <pre>
                 {logOutput}
-              </div>
+              </pre>
             </div>
           </ReflexElement>
         </ReflexContainer>
