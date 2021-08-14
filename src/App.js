@@ -67,7 +67,11 @@ function ExprTree({ tree }) {
         case "ON_SUCCESS":
           const { tree, map } = data.payload;
           setCompiledTree(tree);
-          setMap(map);
+          let expanded = {};
+          Object.keys(map).forEach((key) => {
+            expanded[key] = true;
+          });
+          setMap(expanded);
           setWorking(false);
           break;
         default:
@@ -132,12 +136,14 @@ function App() {
   const [context, setContext] = useState(null);
   const [value, setValue] = useState(null);
   const [logOutput, setLogOutput] = useState("");
+  const [requestRunning, setRequestRunning] = useState(false);
 
   const log = (str) => {
     setLogOutput(logOutput.concat(str + '\n'));
   };
 
   const handleInterpret = async () => {
+    setRequestRunning(true);
     const res = await axios.post("/run", { source });
     try {
       const bundle = JSON.parse(res.data.bundle);
@@ -152,8 +158,10 @@ function App() {
       setStage4Tree(bundle.stage4);
       setCoreExpr(bundle.core);
       setValue(bundle.value);
+      setRequestRunning(false);
     } catch (e) {
       console.error(e);
+      setRequestRunning(false);
     }
   };
 
@@ -179,7 +187,7 @@ function App() {
                   />
                 </Box>
                 <Box h="10" w="100%">
-                  <Button onClick={handleInterpret}>Interpret</Button>
+                  <Button onClick={handleInterpret} size="sm">Interpret</Button>
                 </Box>
               </VStack>
             </Box>
@@ -187,6 +195,11 @@ function App() {
           <ReflexSplitter style={{ height: '8px' }} />
           <ReflexElement>
             <div className="pane-content">
+              {requestRunning ? (
+                <div>
+                  wait...
+                </div>
+              ) : (
               <Tabs size="sm" width="100%" height="100%">
                 <TabList>
                   <Tab>Source tree</Tab>
@@ -233,6 +246,7 @@ function App() {
                   </TabPanel>
                 </TabPanels>
               </Tabs>
+              )}
             </div>
           </ReflexElement>
           <ReflexSplitter style={{ height: '8px' }} />
