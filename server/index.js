@@ -14,11 +14,14 @@ app.use(cors());
 
 app.post("/run", (req, res) => {
   console.log(req.body);
-  exec(`${cmd} '${req.body.source.replace(/\'/g, "'\\\''")}'`, (error, stdout, stderr) => {
-    res.json({
-      bundle: stdout,
-    });
-  });
+  exec(
+    `${cmd} '${req.body.source.replace(/\'/g, "'\\''")}'`,
+    (error, stdout, stderr) => {
+      res.json({
+        bundle: stdout,
+      });
+    }
+  );
 });
 
 app.listen(port, () => {

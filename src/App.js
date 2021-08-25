@@ -157,6 +157,7 @@ function App() {
   const [stage4Tree, setStage4Tree] = useState(null);
   const [coreExpr, setCoreExpr] = useState(null);
   const [context, setContext] = useState(null);
+  const [scheme, setScheme] = useState(null);
   const [value, setValue] = useState(null);
   const [logOutput, setLogOutput] = useState("");
   const [requestRunning, setRequestRunning] = useState(false);
@@ -174,6 +175,7 @@ function App() {
       setSourceTree(bundle.source);
       setTypedTree(bundle.typed);
       setContext(bundle.context);
+      setScheme(bundle.scheme);
       setNormalTree(bundle.normal);
       setStage1Tree(bundle.stage1);
       setStage2Tree(bundle.stage2);
@@ -209,6 +211,7 @@ function App() {
                     <Tab>Source tree</Tab>
                     <Tab>Typed tree</Tab>
                     <Tab>Context</Tab>
+                    <Tab>Scheme</Tab>
                     <Tab>Normal tree</Tab>
                     <Tab>S1</Tab>
                     <Tab>S2</Tab>
@@ -231,6 +234,7 @@ function App() {
                     <TabPanel>
                       {context && <ExprTree tree={context} />}
                     </TabPanel>
+                    <TabPanel>{scheme && <ExprTree tree={scheme} />}</TabPanel>
                     <TabPanel>
                       {normalTree && <ExprTree tree={normalTree} />}
                     </TabPanel>

@@ -41,6 +41,14 @@ function main() {
 
   const getAttributes = (datatype, con, children, args) => {
     switch (datatype) {
+      case "Scheme": {
+        const [ks, ps, t] = children;
+
+        return {
+          nodeName: args.toStr,
+          children: [builder(ks), builder(ps), builder(t)],
+        };
+      }
       case "ContextKeyValue": {
         const [k, vs] = children;
         const [name] = k.children;
@@ -50,11 +58,10 @@ function main() {
           children: vs.map(builder),
         };
       }
-
       case "Context": {
         return {
           children: children.map(builder),
-        }
+        };
       }
       case "PredicateT": {
         const [name, a] = children;
