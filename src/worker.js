@@ -462,6 +462,15 @@ function main() {
               ...getTypeInfo(t),
             };
           }
+          case "ECodata": {
+            const [t, name, e] = children;
+
+            return {
+              argument: name,
+              children: [builder(e)],
+              ...getTypeInfo(t),
+            };
+          }
           case "ERecord": {
             const [t, e] = children;
 
